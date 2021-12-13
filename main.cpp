@@ -1,6 +1,7 @@
 // Qt includes
 #include <QString>
-#include <QApplication>               // create QApplication instance
+#include <QMessageBox>
+#include <QtDebug>
 
 // QGIS Includes
 #include <qgsapplication.h>           // QgsApplication instead of Qt's QApplication to get some added benifits of various static methods that can be used to locate library paths and so on.
@@ -26,33 +27,33 @@ int main(int argc, char **argv)
  QgsProviderRegistry::instance(myPluginsDir);  // Its a singleton class so we use the static instance call and pass it the provider lib search path. As it initialises it will scan this path for provider libs.
 
  // create a maplayer instance / create the layer object
- QgsVectorLayer *mypLayer = new QgsVectorLayer(myLayerPath, myLayerBaseName, myProviderName);
+ QgsVectorLayer *vecLayer = new QgsVectorLayer(myLayerPath, myLayerBaseName, myProviderName);
 
- QgsSingleSymbolRenderer *mypRenderer = new QgsSingleSymbolRenderer(QgsSymbol::defaultSymbol(mypLayer->geometryType()));
+ QgsSingleSymbolRenderer *vecRenderer = new QgsSingleSymbolRenderer(QgsSymbol::defaultSymbol(vecLayer->geometryType()));
 
  QList <QgsMapLayer*> myLayerSet;
 
- mypLayer->setRenderer(mypRenderer);
- if (mypLayer->isValid())
- {
-   qDebug("Layer is valid");
- }
+ vecLayer->setRenderer(vecRenderer);
+
+ if (vecLayer->isValid())
+   qDebug() << "Layer is valid";  // or qDebug("Layer is valid");
  else
- {
-   qDebug("Layer is NOT valid");
- }
+   QMessageBox::critical(NULL, "error", "Layer is NOT valid");
 
- QgsProject::instance()->addMapLayer(mypLayer);
+ // Add Vector Layer to the Layer Registry
+ QgsProject::instance()->addMapLayer(vecLayer);
 
- myLayerSet.append(mypLayer);
+ // Add Layer to the Layer Set
+ myLayerSet.append(vecLayer);
 
  QgsMapCanvas *mapcanvas = new QgsMapCanvas();
- mapcanvas->setExtent(mypLayer->extent());
+ mapcanvas->setExtent(vecLayer->extent());
  mapcanvas->enableAntiAliasing(true);
  mapcanvas->setCanvasColor(QColor(255, 255, 255));
  mapcanvas->freeze(false);
- mapcanvas->setWindowTitle("GUI MAP");
+ mapcanvas->setWindowTitle("GUI GIS DATA");
 
+ // Set the Map Canvas Layer Set
  mapcanvas->setLayers(myLayerSet);
  mapcanvas->setVisible(true);
  mapcanvas->refresh();
