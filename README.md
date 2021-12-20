@@ -1,2 +1,2 @@
 # CPP_GUI
-GUI creation in Qt Creator using QGIS
+Programming Graphical User Interface (GUI) in Qt Creator using QGIS API
