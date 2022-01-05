@@ -1,8 +1,10 @@
 SOURCES += \
-    main.cpp
+    main.cpp \
+    mainwindow.cpp
 
 HEADERS += \
-    main.h
+    main.h \
+    mainwindow.h
 
 TEMPLATE = app
 TARGET = GUI
@@ -37,3 +39,6 @@ INCLUDEPATH += $$QGIS_DIR/src/core/layertree
 INCLUDEPATH += $$QGIS_DIR/src/core/textrenderer
 
 DEFINES += CORE_EXPORT= GUI_EXPORT=
+
+FORMS += \
+    mainwindowbase.ui
