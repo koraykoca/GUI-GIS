@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     setupUi(this);
 
     // Instantiate Provider Registry
-    QString myPluginsDir = "/home/koray/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
+    QString myPluginsDir = "/home/unibw/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
 
     QgsProviderRegistry::instance(myPluginsDir);
 
@@ -89,7 +89,7 @@ void MainWindow::zoomOutMode()
 
 void MainWindow::addLayer()
 {
-    QString myLayerPath  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
+    QString myLayerPath  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
     QString myLayerBaseName = "geb01_f";
     QString myProviderName = "ogr";
 
