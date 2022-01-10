@@ -15,10 +15,10 @@ CONFIG += c++17
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-QGIS_DIR = /home/unibw/dev/cpp/QGIS
-BUILD_DIR = /home/unibw/dev/cpp/QGIS-Debug-Build
+QGIS_DIR = /home/koray/dev/cpp/QGIS
+BUILD_DIR = /home/koray/dev/cpp/QGIS/build-master-qtcreator
 
-LIBS += -L$${BUILD_DIR}/output/lib -lqgis_app -lqgis_core -lqgis_gui
+LIBS += -L$${QGIS_DIR}/output/lib -lqgis_app -lqgis_core -lqgis_gui
 
 INCLUDEPATH += $$QGIS_DIR
 INCLUDEPATH += $$QGIS_DIR/src/core
@@ -38,9 +38,6 @@ INCLUDEPATH += $$QGIS_DIR/src/core/labeling
 INCLUDEPATH += $$QGIS_DIR/src/core/raster
 INCLUDEPATH += $$QGIS_DIR/src/core/layertree
 INCLUDEPATH += $$QGIS_DIR/src/core/textrenderer
-
-INCLUDEPATH += $$BUILD_DIR/src/core
-INCLUDEPATH += $$BUILD_DIR/src/gui
 
 DEFINES += CORE_EXPORT= GUI_EXPORT=
 
