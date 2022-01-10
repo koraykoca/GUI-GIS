@@ -1,19 +1,27 @@
+QT += core gui xml
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+CONFIG += c++17
+
+DEFINES += CORE_EXPORT= GUI_EXPORT=
+DEFINES += QT_DEPRECATED_WARNINGS
+
 SOURCES += \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
-    main.h \
     mainwindow.h
 
+FORMS += \
+    mainwindowbase.ui
+
+RESOURCES += \
+    resources.qrc
+
 TEMPLATE = app
-TARGET = GUI
-
-QT += core gui xml
-
-CONFIG += c++17
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+TARGET = Cpp_GUI
 
 QGIS_DIR = /home/koray/dev/cpp/QGIS
 
@@ -38,7 +46,7 @@ INCLUDEPATH += $$QGIS_DIR/src/core/raster
 INCLUDEPATH += $$QGIS_DIR/src/core/layertree
 INCLUDEPATH += $$QGIS_DIR/src/core/textrenderer
 
-DEFINES += CORE_EXPORT= GUI_EXPORT=
-
-FORMS += \
-    mainwindowbase.ui
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
