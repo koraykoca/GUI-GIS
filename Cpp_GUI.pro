@@ -16,9 +16,8 @@ CONFIG += c++17
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 QGIS_DIR = /home/koray/dev/cpp/QGIS
-BUILD_DIR = /home/koray/dev/cpp/QGIS/build-master-qtcreator
 
-LIBS += -L$${QGIS_DIR}/output/lib -lqgis_app -lqgis_core -lqgis_gui
+LIBS += -L/$${QGIS_DIR}/build-master-qtcreator/output/lib -lqgis_core -lqgis_gui -lqgis_app
 
 INCLUDEPATH += $$QGIS_DIR
 INCLUDEPATH += $$QGIS_DIR/src/core
