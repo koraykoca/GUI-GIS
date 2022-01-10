@@ -1,17 +1,17 @@
-SOURCES += \
-    main.cpp
-
-HEADERS += \
-    main.h
-
-TEMPLATE = app
-TARGET = GUI
-
-QT += core gui xml
+QT += core gui xml  # includes core, gui, and xml libraries
 
 CONFIG += c++17
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets  # widget application
+
+TEMPLATE = app  # GUI application
+TARGET = Cpp_GUI  # name of the project
+
+SOURCES += main.cpp
+
+HEADERS += main.h
+
+FORMS +=
 
 QGIS_DIR = /home/koray/dev/cpp/QGIS
 
