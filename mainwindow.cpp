@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
 
     QgsProviderRegistry::instance(myPluginsDir);
 
-    mpMapCanvas = new QgsMapCanvas();
+    mpMapCanvas = new QgsMapCanvas();  // QgsMapCanvas to visualize QgsMapLayers like QgsVectorLayer or QgsRasterLayer
 
     mpMapCanvas->enableAntiAliasing(true);
     mpMapCanvas->setCanvasColor(QColor(255, 255, 255));
@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(actionMap_2, SIGNAL(triggered()), this, SLOT(addLayer2()));
     connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(addLayer1()));
     connect(checkBox_2, SIGNAL(stateChanged(int)), this, SLOT(addLayer2()));
+    connect(checkBox_3, SIGNAL(stateChanged(int)), this, SLOT(addLayer3()));
 
     QToolButton* toolButton = new QToolButton();
     toolButton->setMenu(menuAdd_Layer);
@@ -62,7 +63,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     mpMapToolBar->addAction(mpActionZoomOut);
     mpMapToolBar->addAction(mpActionPan);
 
-    //create the maptools
+    //create the map tools
     mpPanTool = new QgsMapToolPan(mpMapCanvas);
     mpPanTool->setAction(mpActionPan);
 
@@ -83,6 +84,9 @@ MainWindow::~MainWindow()
   delete mpLayout;
   delete actionMap_1;
   delete actionMap_2;
+  delete checkBox;
+  delete checkBox_2;
+  delete checkBox_3;
 }
 
 void MainWindow::panMode()
@@ -100,67 +104,123 @@ void MainWindow::zoomOutMode()
     mpMapCanvas->setMapTool(mpZoomOutTool);
 }
 
+QgsVectorLayer * ptrLayer1 = nullptr;
+QgsVectorLayer * ptrLayer2 = nullptr;
+QgsVectorLayer * ptrLayer3 = nullptr;
+
 void MainWindow::addLayer1()
 {
-    QString myLayerPath  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
-    QString myLayerBaseName = "geb01_f";
-    QString myProviderName = "ogr";
+    if (layers.contains(ptrLayer1) == false){
 
-    QgsVectorLayer * mypLayer = new QgsVectorLayer(myLayerPath, myLayerBaseName, myProviderName);
+        QString myLayerPath  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
+        QString myLayerBaseName = "geb01_f";
+        QString myProviderName = "ogr";
 
-    QgsSymbol *symbol = QgsSymbol::defaultSymbol(mypLayer->geometryType());
+        QgsVectorLayer * mypLayer = new QgsVectorLayer(myLayerPath, myLayerBaseName, myProviderName);
 
-    symbol->setColor(QColor("#4d913d"));
+        ptrLayer1 = mypLayer;
 
-    QgsSingleSymbolRenderer *mypRenderer = new QgsSingleSymbolRenderer(symbol);
+        QgsSymbol *symbol = QgsSymbol::defaultSymbol(mypLayer->geometryType());
 
-    //QList <QgsMapLayer *> layers;
+        symbol->setColor(QColor("#CD736C"));
 
-    mypLayer->setRenderer(mypRenderer);
+        QgsSingleSymbolRenderer *mypRenderer = new QgsSingleSymbolRenderer(symbol);
 
-    // Add the Vector Layer to the Project Registry
-    QgsProject::instance()->addMapLayer(mypLayer, true);
+        qDebug() << mypLayer;
 
-    // Add the Layer to the Layer Set
-    if (layer_names.contains("layer1") == false){
+        // Add the Vector Layer to the Project Registry. Before map layers can be rendered,
+        // they need to be stored in a QgsMapLayerStore. This will be done by adding the current QgsProject instance
+        QgsProject::instance()->addMapLayer(mypLayer, true);
+
+        mypLayer->setRenderer(mypRenderer);
+
+        // Add the Layer to the Layer Set
         layers.append(mypLayer);
-        layer_names.append("layer1");
-    }
 
-    // set the canvas to the extent of our layer
-    mpMapCanvas->setExtent(mypLayer->extent());
+        // set the canvas to the extent of our layer. We focus the map canvas to the spatial extent of our layer
+        mpMapCanvas->setExtent(mypLayer->extent());
+        }
 
-    // Set the Map Canvas Layers
-    mpMapCanvas->setLayers(layers);
+    else{
+        layers.removeOne(ptrLayer1);
+        }
 
+        // Set the Map Canvas Layers
+        mpMapCanvas->setLayers(layers);
 }
 
 void MainWindow::addLayer2()
 {
     QString myLayerPath2  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
-    QString myLayerBaseName2 = "ver01.l_p";
+    QString myLayerBaseName2 = "ver01_l";
     QString myProviderName = "ogr";
 
-    QgsVectorLayer * mypLayer2 = new QgsVectorLayer(myLayerPath2, myLayerBaseName2, myProviderName);
+    if (layers.contains(ptrLayer2) == false){
+        QgsVectorLayer * mypLayer2 = new QgsVectorLayer(myLayerPath2, myLayerBaseName2, myProviderName);
 
-    QgsSingleSymbolRenderer *mypRenderer2 = new QgsSingleSymbolRenderer(QgsSymbol::defaultSymbol(mypLayer2->geometryType()));
+        ptrLayer2 = mypLayer2;
 
-    mypLayer2->setRenderer(mypRenderer2);
+        QgsSymbol *symbol = QgsSymbol::defaultSymbol(mypLayer2->geometryType());
 
-    // Add the Vector Layer to the Project Registry
-    QgsProject::instance()->addMapLayer(mypLayer2, true);
+        symbol->setColor(QColor("#AFE52F"));
 
-    // Add the Layer to the Layer Set
-    if (layer_names.contains("layer2") == false){
+        QgsSingleSymbolRenderer *mypRenderer2 = new QgsSingleSymbolRenderer(symbol);
+
+        mypLayer2->setRenderer(mypRenderer2);
+
+        // Add the Vector Layer to the Project Registry
+        QgsProject::instance()->addMapLayer(mypLayer2, true);
+
+        if (layers.isEmpty() == true){
+             mpMapCanvas->setExtent(mypLayer2->extent());
+        }
+
         layers.push_front(mypLayer2);
-        layer_names.append("layer2");
     }
 
-    // set the canvas to the extent of our layer
-    if (layer_names.contains("layer1") == false){
-        mpMapCanvas->setExtent(mypLayer2->extent());
-    }
+        else{
+            layers.removeOne(ptrLayer2);
+        }
 
-    // Set the Map Canvas Layers
-    mpMapCanvas->setLayers(layers);
+        // Set the Map Canvas Layers
+        mpMapCanvas->setLayers(layers);
 }
+
+void MainWindow::addLayer3()
+{
+    QString myLayerPath3  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
+    QString myLayerBaseName3 = "veg02_f";
+    QString myProviderName = "ogr";
+
+    if (layers.contains(ptrLayer3) == false){
+
+        QgsVectorLayer * mypLayer3 = new QgsVectorLayer(myLayerPath3, myLayerBaseName3, myProviderName);
+
+        ptrLayer3 = mypLayer3;
+
+        QgsSymbol *symbol = QgsSymbol::defaultSymbol(mypLayer3->geometryType());
+
+        symbol->setColor(QColor("#B35BBD"));
+
+        QgsSingleSymbolRenderer *mypRenderer3 = new QgsSingleSymbolRenderer(symbol);
+
+        mypLayer3->setRenderer(mypRenderer3);
+
+        // Add the Vector Layer to the Project Registry
+        QgsProject::instance()->addMapLayer(mypLayer3, true);
+
+        if (layers.isEmpty() == true){
+            mpMapCanvas->setExtent(mypLayer3->extent());
+        }
+
+        layers.push_front(mypLayer3);
+    }
+
+        else{
+            layers.removeOne(ptrLayer3);
+        }
+
+        // Set the Map Canvas Layers
+        mpMapCanvas->setLayers(layers);
+}
+

@@ -23,7 +23,6 @@ public:
     MainWindow(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     ~MainWindow();
     QList <QgsMapLayer *> layers;
-    QList <QString> layer_names;
 
 public slots:
     void zoomInMode();
@@ -31,6 +30,7 @@ public slots:
     void panMode();
     void addLayer1();
     void addLayer2();
+    void addLayer3();
 
 private:
     QgsMapCanvas * mpMapCanvas;
