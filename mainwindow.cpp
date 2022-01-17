@@ -13,6 +13,7 @@
 // QGIS Map tools
 #include "qgsmaptoolpan.h"
 #include "qgsmaptoolzoom.h"
+#include "qgsmaptoolemitpoint.h"
 
 #include <qtoolbutton.h>
 #include <qlist.h>
@@ -36,6 +37,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     mpMapCanvas->setVisible(true);
     mpMapCanvas->refresh();
     mpMapCanvas->show();
+    mpMapCanvas->setMouseTracking(true);
+
+    mpClickPoint = new QgsMapToolEmitPoint(mpMapCanvas);
+    mpMapCanvas->setMapTool(mpClickPoint);
 
     // Lay our widgets out in the main window
     mpLayout = new QVBoxLayout(frameMap);
@@ -50,6 +55,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(addLayer1()));
     connect(checkBox_2, SIGNAL(stateChanged(int)), this, SLOT(addLayer2()));
     connect(checkBox_3, SIGNAL(stateChanged(int)), this, SLOT(addLayer3()));
+    connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(showCoord()));
 
     QToolButton* toolButton = new QToolButton();
     toolButton->setMenu(menuAdd_Layer);
@@ -67,10 +73,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     mpPanTool = new QgsMapToolPan(mpMapCanvas);
     mpPanTool->setAction(mpActionPan);
 
-    mpZoomInTool = new QgsMapToolZoom(mpMapCanvas, false); // false = in
+    mpZoomInTool = new QgsMapToolZoom(mpMapCanvas, false); // false = zoom in
     mpZoomInTool->setAction(mpActionZoomIn);
 
-    mpZoomOutTool = new QgsMapToolZoom(mpMapCanvas, true ); //true = out
+    mpZoomOutTool = new QgsMapToolZoom(mpMapCanvas, true ); //true = zoom out
     mpZoomOutTool->setAction(mpActionZoomOut);
 }
 
@@ -87,6 +93,11 @@ MainWindow::~MainWindow()
   delete checkBox;
   delete checkBox_2;
   delete checkBox_3;
+}
+
+void MainWindow::showCoord()
+{
+    this->label->setText("Clicked");
 }
 
 void MainWindow::panMode()

@@ -4,6 +4,7 @@
 //QGIS Includes
 #include <qgsmapcanvas.h>
 #include <qgsmaptool.h>
+#include <qgsmaptoolemitpoint.h>
 
 //QT Includes
 #include <QtGui>
@@ -31,6 +32,7 @@ public slots:
     void addLayer1();
     void addLayer2();
     void addLayer3();
+    void showCoord();
 
 private:
     QgsMapCanvas * mpMapCanvas;
@@ -39,6 +41,9 @@ private:
     QgsMapTool * mpPanTool;
     QgsMapTool * mpZoomInTool;
     QgsMapTool * mpZoomOutTool;
+    QgsMapTool * mpCoordTool;
+    QgsMapToolEmitPoint *mpClickPoint;
+
 };
 
 #endif // MAINWINDOW_H
