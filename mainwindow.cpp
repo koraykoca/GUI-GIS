@@ -56,7 +56,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(addLayer1()));
     connect(checkBox_2, SIGNAL(stateChanged(int)), this, SLOT(addLayer2()));
     connect(checkBox_3, SIGNAL(stateChanged(int)), this, SLOT(addLayer3()));
-    connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(showCoord()));
+    connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(showCoord(QgsPointXY)));
+
 
     QToolButton* toolButton = new QToolButton();
     toolButton->setMenu(menuAdd_Layer);
@@ -96,9 +97,11 @@ MainWindow::~MainWindow()
   delete checkBox_3;
 }
 
-void MainWindow::showCoord()
+void MainWindow::showCoord(QgsPointXY point)
 {
     this->label->setText("Clicked");
+    qDebug() << point.x();
+    qDebug() << point.y();
 }
 
 void MainWindow::panMode()

@@ -32,7 +32,7 @@ public slots:
     void addLayer1();
     void addLayer2();
     void addLayer3();
-    void showCoord();
+    void showCoord(QgsPointXY);
 
 private:
     QgsMapCanvas * mpMapCanvas;
