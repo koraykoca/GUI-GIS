@@ -26,6 +26,7 @@ public:
     MainWindow(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     ~MainWindow();
     QList <QgsMapLayer *> layers;
+    QList <QString> tools;
 
 public slots:
     void zoomInMode();
@@ -35,6 +36,7 @@ public slots:
     void addLayer2();
     void addLayer3();
     void showCoord(QgsPointXY);
+    void putMarker();
 
 private:
     QgsMapCanvas * mpMapCanvas;

@@ -46,7 +46,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     mpMapCanvas->setMouseTracking(true);
 
     mpClickPoint = new QgsMapToolEmitPoint(mpMapCanvas);
-    mpMapCanvas->setMapTool(mpClickPoint);
 
     // Lay our widgets out in the main window
     mpLayout = new QVBoxLayout(frameMap);
@@ -62,6 +61,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(checkBox_2, SIGNAL(stateChanged(int)), this, SLOT(addLayer2()));
     connect(checkBox_3, SIGNAL(stateChanged(int)), this, SLOT(addLayer3()));
     connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(showCoord(QgsPointXY)));
+    connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(putMarker()));
 
 
     QToolButton* toolButton = new QToolButton();
@@ -75,6 +75,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     mpMapToolBar->addAction(mpActionZoomIn);
     mpMapToolBar->addAction(mpActionZoomOut);
     mpMapToolBar->addAction(mpActionPan);
+
+    mpActionZoomIn->setCheckable(true);
+    mpActionZoomOut->setCheckable(true);
+    mpActionPan->setCheckable(true);
 
     //create the map tools
     mpPanTool = new QgsMapToolPan(mpMapCanvas);
@@ -109,19 +113,40 @@ void MainWindow::showCoord(QgsPointXY point)
     this->label_3->setText(QString::number(point.x(), 'f', 4));
 }
 
+void MainWindow::putMarker()
+{}
+
 void MainWindow::panMode()
 {
-    mpMapCanvas->setMapTool(mpPanTool);
+    if (mpActionPan->isChecked()){
+        mpMapCanvas->setMapTool(mpPanTool);
+    }
+    else{
+        mpMapCanvas->unsetMapTool(mpPanTool);
+        mpMapCanvas->setMapTool(mpClickPoint);
+    }
 }
 
 void MainWindow::zoomInMode()
 {
-    mpMapCanvas->setMapTool(mpZoomInTool);
+    if (mpActionZoomIn->isChecked()){
+        mpMapCanvas->setMapTool(mpZoomInTool);
+    }
+    else{
+        mpMapCanvas->unsetMapTool(mpZoomInTool);
+        mpMapCanvas->setMapTool(mpClickPoint);
+    }
 }
 
 void MainWindow::zoomOutMode()
 {
-    mpMapCanvas->setMapTool(mpZoomOutTool);
+   if (mpActionZoomOut->isChecked()){
+       mpMapCanvas->setMapTool(mpZoomOutTool);
+   }
+   else{
+       mpMapCanvas->unsetMapTool(mpZoomOutTool);
+       mpMapCanvas->setMapTool(mpClickPoint);
+   }
 }
 
 QgsVectorLayer * ptrLayer1 = nullptr;
@@ -157,17 +182,21 @@ void MainWindow::addLayer1()
 
         // Add the Layer to the Layer Set
         layers.append(mypLayer);
+        mpMapCanvas->setMapTool(mpClickPoint);
 
         // set the canvas to the extent of our layer. We focus the map canvas to the spatial extent of our layer
         mpMapCanvas->setExtent(mypLayer->extent());
-        }
+    }
 
     else{
         layers.removeOne(ptrLayer1);
+        if (layers.isEmpty() == true){
+             mpMapCanvas->unsetMapTool(mpClickPoint);
         }
 
         // Set the Map Canvas Layers
         mpMapCanvas->setLayers(layers);
+    }
 }
 
 void MainWindow::addLayer2()
@@ -194,14 +223,18 @@ void MainWindow::addLayer2()
         QgsProject::instance()->addMapLayer(mypLayer2, true);
 
         if (layers.isEmpty() == true){
-             mpMapCanvas->setExtent(mypLayer2->extent());
+            mpMapCanvas->setExtent(mypLayer2->extent());
         }
 
         layers.push_front(mypLayer2);
+        mpMapCanvas->setMapTool(mpClickPoint);
     }
 
         else{
             layers.removeOne(ptrLayer2);
+             if (layers.isEmpty() == true){
+                mpMapCanvas->unsetMapTool(mpClickPoint);
+             }
         }
 
         // Set the Map Canvas Layers
@@ -237,10 +270,14 @@ void MainWindow::addLayer3()
         }
 
         layers.push_front(mypLayer3);
+        mpMapCanvas->setMapTool(mpClickPoint);
     }
 
         else{
             layers.removeOne(ptrLayer3);
+            if (layers.isEmpty() == true){
+                mpMapCanvas->unsetMapTool(mpClickPoint);
+            }
         }
 
         // Set the Map Canvas Layers

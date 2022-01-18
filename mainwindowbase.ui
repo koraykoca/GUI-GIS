@@ -154,6 +154,9 @@
    <property name="checkable">
     <bool>false</bool>
    </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/mActionZoomIn.png</normaloff>:/mActionZoomIn.png</iconset>
