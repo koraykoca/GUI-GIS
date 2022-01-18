@@ -5,6 +5,7 @@
 #include <qgsmapcanvas.h>
 #include <qgsmaptool.h>
 #include <qgsmaptoolemitpoint.h>
+#include "qgscoordinatereferencesystem.h"
 
 //QT Includes
 #include <QtGui>
@@ -15,6 +16,7 @@
 
 //Local Includes
 #include <ui_mainwindowbase.h>
+
 
 class MainWindow : public QMainWindow, private Ui::MainWindowBase
 {
@@ -43,7 +45,9 @@ private:
     QgsMapTool * mpZoomOutTool;
     QgsMapTool * mpCoordTool;
     QgsMapToolEmitPoint *mpClickPoint;
-
+    QgsCoordinateReferenceSystem crsSrc;
+    QgsCoordinateReferenceSystem crsDest;
+    QgsCoordinateTransform mTransform;
 };
 
 #endif // MAINWINDOW_H

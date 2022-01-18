@@ -13,7 +13,6 @@
 // QGIS Map tools
 #include "qgsmaptoolpan.h"
 #include "qgsmaptoolzoom.h"
-#include "qgsmaptoolemitpoint.h"
 
 #include <qtoolbutton.h>
 #include <qlist.h>
@@ -27,6 +26,12 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     // Instantiate Provider Registry
     //QString myPluginsDir = "/home/koray/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
     QString myPluginsDir = "/home/unibw/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
+
+    crsSrc = QgsCoordinateReferenceSystem("EPSG:25832");  // UTM Zone 32
+    crsDest = QgsCoordinateReferenceSystem("EPSG:4326");  // WGS 84
+
+    QgsCoordinateTransformContext context;
+    mTransform = QgsCoordinateTransform(crsSrc, crsDest, context);
 
     QgsProviderRegistry::instance(myPluginsDir);
 
@@ -99,9 +104,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::showCoord(QgsPointXY point)
 {
-    this->label->setText("Clicked");
-    qDebug() << point.x();
-    qDebug() << point.y();
+    point = mTransform.transform(point);
+    this->label_2->setText(QString::number(point.y(), 'f', 4));
+    this->label_3->setText(QString::number(point.x(), 'f', 4));
 }
 
 void MainWindow::panMode()
