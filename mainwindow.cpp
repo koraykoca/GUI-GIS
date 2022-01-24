@@ -24,8 +24,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     setupUi(this);
 
     // Instantiate Provider Registry
-    //QString myPluginsDir = "/home/koray/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
-    QString myPluginsDir = "/home/unibw/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
+    QString myPluginsDir = "/home/koray/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
+    //QString myPluginsDir = "/home/unibw/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
 
     crsSrc = QgsCoordinateReferenceSystem("EPSG:25832");  // UTM Zone 32
     crsDest = QgsCoordinateReferenceSystem("EPSG:4326");  // WGS 84
@@ -60,17 +60,17 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(addLayer1()));
     connect(checkBox_2, SIGNAL(stateChanged(int)), this, SLOT(addLayer2()));
     connect(checkBox_3, SIGNAL(stateChanged(int)), this, SLOT(addLayer3()));
+    connect(checkBox_4, SIGNAL(stateChanged(int)), this, SLOT(addLayer4()));
     connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(showCoord(QgsPointXY)));
-    connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(putMarker()));
+    //connect(m, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(putMarker()));
 
-
-    QToolButton* toolButton = new QToolButton();
+    QToolButton* toolButton = new QToolButton();  // local variable
     toolButton->setMenu(menuAdd_Layer);
     toolButton->setIcon(QIcon(":/mActionAddLayer.png"));
     toolButton->setPopupMode(QToolButton::InstantPopup);
 
     //create a little toolbar
-    mpMapToolBar = addToolBar(tr("File"));
+    mpMapToolBar = addToolBar(tr("Canvas Actions"));
     mpMapToolBar->addWidget(toolButton);
     mpMapToolBar->addAction(mpActionZoomIn);
     mpMapToolBar->addAction(mpActionZoomOut);
@@ -108,13 +108,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::showCoord(QgsPointXY point)
 {
-    point = mTransform.transform(point);
+    if (layers.contains(ptrLayer4) == false){
+        point = mTransform.transform(point);
+    }
     this->label_2->setText(QString::number(point.y(), 'f', 4));
     this->label_3->setText(QString::number(point.x(), 'f', 4));
 }
 
 void MainWindow::putMarker()
-{}
+{
+    QMainWindow::statusBar()->showMessage(tr("CLicked"));
+}
 
 void MainWindow::panMode()
 {
@@ -149,16 +153,16 @@ void MainWindow::zoomOutMode()
    }
 }
 
-QgsVectorLayer * ptrLayer1 = nullptr;
-QgsVectorLayer * ptrLayer2 = nullptr;
-QgsVectorLayer * ptrLayer3 = nullptr;
-
 void MainWindow::addLayer1()
 {
+    if (layers.contains(ptrLayer4) == true){
+        layers.removeOne(ptrLayer4);
+    }
+
     if (layers.contains(ptrLayer1) == false){
 
-        //QString myLayerPath  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
-        QString myLayerPath  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
+        QString myLayerPath  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
+        //QString myLayerPath  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
         QString myLayerBaseName = "geb01_f";
         QString myProviderName = "ogr";
 
@@ -171,8 +175,6 @@ void MainWindow::addLayer1()
         symbol->setColor(QColor("#CD736C"));
 
         QgsSingleSymbolRenderer *mypRenderer = new QgsSingleSymbolRenderer(symbol);
-
-        qDebug() << mypLayer;
 
         // Add the Vector Layer to the Project Registry. Before map layers can be rendered,
         // they need to be stored in a QgsMapLayerStore. This will be done by adding the current QgsProject instance
@@ -193,20 +195,24 @@ void MainWindow::addLayer1()
         if (layers.isEmpty() == true){
              mpMapCanvas->unsetMapTool(mpClickPoint);
         }
-
-        // Set the Map Canvas Layers
-        mpMapCanvas->setLayers(layers);
     }
+    // Set the Map Canvas Layers
+    mpMapCanvas->setLayers(layers);
 }
 
 void MainWindow::addLayer2()
-{
-    //QString myLayerPath2  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
-    QString myLayerPath2  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
-    QString myLayerBaseName2 = "ver01_l";
-    QString myProviderName = "ogr";
+{    
+    if (layers.contains(ptrLayer4) == true){
+        layers.removeOne(ptrLayer4);
+    }
 
     if (layers.contains(ptrLayer2) == false){
+
+        QString myLayerPath2  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
+        //QString myLayerPath2  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
+        QString myLayerBaseName2 = "ver01_l";
+        QString myProviderName = "ogr";
+
         QgsVectorLayer * mypLayer2 = new QgsVectorLayer(myLayerPath2, myLayerBaseName2, myProviderName);
 
         ptrLayer2 = mypLayer2;
@@ -230,25 +236,28 @@ void MainWindow::addLayer2()
         mpMapCanvas->setMapTool(mpClickPoint);
     }
 
-        else{
-            layers.removeOne(ptrLayer2);
-             if (layers.isEmpty() == true){
-                mpMapCanvas->unsetMapTool(mpClickPoint);
-             }
-        }
-
-        // Set the Map Canvas Layers
-        mpMapCanvas->setLayers(layers);
+    else{
+        layers.removeOne(ptrLayer2);
+         if (layers.isEmpty() == true){
+            mpMapCanvas->unsetMapTool(mpClickPoint);
+         }
+    }
+    // Set the Map Canvas Layers
+    mpMapCanvas->setLayers(layers);
 }
 
 void MainWindow::addLayer3()
 {
-    //QString myLayerPath3  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
-    QString myLayerPath3  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
-    QString myLayerBaseName3 = "veg02_f";
-    QString myProviderName = "ogr";
+    if (layers.contains(ptrLayer4) == true){
+        layers.removeOne(ptrLayer4);
+    }
 
     if (layers.contains(ptrLayer3) == false){
+
+        QString myLayerPath3  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
+        //QString myLayerPath3  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
+        QString myLayerBaseName3 = "veg02_f";
+        QString myProviderName = "ogr";
 
         QgsVectorLayer * mypLayer3 = new QgsVectorLayer(myLayerPath3, myLayerBaseName3, myProviderName);
 
@@ -273,14 +282,50 @@ void MainWindow::addLayer3()
         mpMapCanvas->setMapTool(mpClickPoint);
     }
 
-        else{
-            layers.removeOne(ptrLayer3);
-            if (layers.isEmpty() == true){
-                mpMapCanvas->unsetMapTool(mpClickPoint);
-            }
+    else{
+        layers.removeOne(ptrLayer3);
+        if (layers.isEmpty() == true){
+            mpMapCanvas->unsetMapTool(mpClickPoint);
         }
-
-        // Set the Map Canvas Layers
-        mpMapCanvas->setLayers(layers);
+    }
+    // Set the Map Canvas Layers
+    mpMapCanvas->setLayers(layers);
 }
 
+void MainWindow::addLayer4()
+{
+    if (layers.contains(ptrLayer4) == false){
+
+        QString myLayerPath4  = "/home/koray/work-unibw/2021_11_Airspace_Germany.txt";
+        QString myLayerBaseName4 = "2021_11_Airspace_Germany — airspaces";
+        QString myProviderName = "ogr";
+
+        QgsVectorLayer * mypLayer4 = new QgsVectorLayer(myLayerPath4, myLayerBaseName4, myProviderName);
+
+        ptrLayer4 = mypLayer4;
+
+        QgsSymbol *symbol = QgsSymbol::defaultSymbol(mypLayer4->geometryType());
+
+        QgsSingleSymbolRenderer *mypRenderer4 = new QgsSingleSymbolRenderer(symbol);
+
+        mypLayer4->setRenderer(mypRenderer4);
+
+        // Add the Vector Layer to the Project Registry
+        QgsProject::instance()->addMapLayer(mypLayer4, true);
+
+        mpMapCanvas->setExtent(mypLayer4->extent());
+
+        layers.clear();
+        layers.append(mypLayer4);
+
+        mpMapCanvas->setMapTool(mpClickPoint);
+    }
+    else{
+        layers.removeOne(ptrLayer4);
+        if (layers.isEmpty() == true){
+            mpMapCanvas->unsetMapTool(mpClickPoint);
+        }
+    }
+    // Set the Map Canvas Layers
+    mpMapCanvas->setLayers(layers);
+}

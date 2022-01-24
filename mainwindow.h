@@ -35,6 +35,7 @@ public slots:
     void addLayer1();
     void addLayer2();
     void addLayer3();
+    void addLayer4();
     void showCoord(QgsPointXY);
     void putMarker();
 
@@ -50,6 +51,10 @@ private:
     QgsCoordinateReferenceSystem crsSrc;
     QgsCoordinateReferenceSystem crsDest;
     QgsCoordinateTransform mTransform;
+    QgsVectorLayer * ptrLayer1 = nullptr;
+    QgsVectorLayer * ptrLayer2 = nullptr;
+    QgsVectorLayer * ptrLayer3 = nullptr;
+    QgsVectorLayer * ptrLayer4 = nullptr;
 };
 
 #endif // MAINWINDOW_H

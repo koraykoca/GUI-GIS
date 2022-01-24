@@ -23,12 +23,12 @@ RESOURCES += \
 TEMPLATE = app
 TARGET = Cpp_GUI
 
-#QGIS_DIR = /home/koray/dev/cpp/QGIS
-#LIBS += -L/$${QGIS_DIR}/build-master-qtcreator/output/lib -lqgis_core -lqgis_gui -lqgis_app
+QGIS_DIR = /home/koray/dev/cpp/QGIS
+LIBS += -L/$${QGIS_DIR}/build-master-qtcreator/output/lib -lqgis_core -lqgis_gui -lqgis_app
 
-QGIS_DIR = /home/unibw/dev/cpp/QGIS
-BUILD_DIR = /home/unibw/dev/cpp/QGIS-Debug-Build
-LIBS += -L$${BUILD_DIR}/output/lib -lqgis_app -lqgis_core -lqgis_gui
+#QGIS_DIR = /home/unibw/dev/cpp/QGIS
+#BUILD_DIR = /home/unibw/dev/cpp/QGIS-Debug-Build
+#LIBS += -L$${BUILD_DIR}/output/lib -lqgis_app -lqgis_core -lqgis_gui
 
 INCLUDEPATH += $$QGIS_DIR
 INCLUDEPATH += $$QGIS_DIR/src/core
@@ -49,8 +49,8 @@ INCLUDEPATH += $$QGIS_DIR/src/core/raster
 INCLUDEPATH += $$QGIS_DIR/src/core/layertree
 INCLUDEPATH += $$QGIS_DIR/src/core/textrenderer
 
-INCLUDEPATH += $$BUILD_DIR/src/core
-INCLUDEPATH += $$BUILD_DIR/src/gui
+#INCLUDEPATH += $$BUILD_DIR/src/core
+#INCLUDEPATH += $$BUILD_DIR/src/gui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
