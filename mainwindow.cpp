@@ -47,6 +47,9 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
 
     mpClickPoint = new QgsMapToolEmitPoint(mpMapCanvas);
 
+    QLabel *marker = new QLabel(mpMapCanvas);
+    marker->setPixmap(QPixmap(":/mapMarker.png"));
+
     // Lay our widgets out in the main window
     mpLayout = new QVBoxLayout(frameMap);
     mpLayout->addWidget(mpMapCanvas);
@@ -61,8 +64,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(checkBox_2, SIGNAL(stateChanged(int)), this, SLOT(addLayer2()));
     connect(checkBox_3, SIGNAL(stateChanged(int)), this, SLOT(addLayer3()));
     connect(checkBox_4, SIGNAL(stateChanged(int)), this, SLOT(addLayer4()));
-    connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(showCoord(QgsPointXY)));
-    //connect(m, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(putMarker()));
+    connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(selectCoord(QgsPointXY)));
+    connect(mpMapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCoord(QgsPointXY)));
 
     QToolButton* toolButton = new QToolButton();  // local variable
     toolButton->setMenu(menuAdd_Layer);
@@ -111,13 +114,32 @@ void MainWindow::showCoord(QgsPointXY point)
     if (layers.contains(ptrLayer4) == false){
         point = mTransform.transform(point);
     }
-    this->label_2->setText(QString::number(point.y(), 'f', 4));
-    this->label_3->setText(QString::number(point.x(), 'f', 4));
+    this->label_2->setText(QString::number(point.y(), 'f', 4) + " " + QString::number(point.x(), 'f', 4));
+}
+
+void MainWindow::selectCoord(QgsPointXY point)
+{
+    if (layers.contains(ptrLayer4) == false){
+        point = mTransform.transform(point);
+    }
+
+    textBrowser->setText(QString::number(point.y(), 'f', 4) + " " + QString::number(point.x(), 'f', 4));
+
+    QLabel *marker = new QLabel(mpMapCanvas);
+    marker->setPixmap(QPixmap(":/mapMarker.png"));
+
+    //marker->setGeometry(mpMapCanvas->geometry());
+    marker->move(point.x(), point.y());
+    marker->adjustSize();
+    marker->setVisible(true);
+    marker->show();
+
 }
 
 void MainWindow::putMarker()
 {
-    QMainWindow::statusBar()->showMessage(tr("CLicked"));
+    QMainWindow::statusBar()->showMessage(tr("Clicked"));
+
 }
 
 void MainWindow::panMode()

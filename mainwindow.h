@@ -13,6 +13,7 @@
 #include <qtoolbar.h>
 #include <QVBoxLayout>
 #include <QObject>
+#include <QLabel>
 
 //Local Includes
 #include <ui_mainwindowbase.h>
@@ -37,6 +38,7 @@ public slots:
     void addLayer3();
     void addLayer4();
     void showCoord(QgsPointXY);
+    void selectCoord(QgsPointXY);
     void putMarker();
 
 private:
@@ -47,10 +49,11 @@ private:
     QgsMapTool * mpZoomInTool;
     QgsMapTool * mpZoomOutTool;
     QgsMapTool * mpCoordTool;
-    QgsMapToolEmitPoint *mpClickPoint;
+    QgsMapToolEmitPoint * mpClickPoint;
     QgsCoordinateReferenceSystem crsSrc;
     QgsCoordinateReferenceSystem crsDest;
     QgsCoordinateTransform mTransform;
+    QLabel *marker;
     QgsVectorLayer * ptrLayer1 = nullptr;
     QgsVectorLayer * ptrLayer2 = nullptr;
     QgsVectorLayer * ptrLayer3 = nullptr;
