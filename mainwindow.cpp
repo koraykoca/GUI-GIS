@@ -16,6 +16,7 @@
 
 #include <qtoolbutton.h>
 #include <qlist.h>
+#include <qpoint.h>
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     : QMainWindow(parent,fl)
@@ -129,6 +130,10 @@ void MainWindow::selectCoord(QgsPointXY point)
     QLabel *marker = new QLabel(mpMapCanvas);
     marker->setPixmap(QPixmap(":/mapMarker.png"));
 
+    QPoint sPoint(float(point.x()), float(point.y()));
+    point = mpMapCanvas->mapToGlobal(sPoint);
+
+    qDebug() << "x:" << point.x() << "y:" << point.y();
     marker->move(point.x(), point.y());
     marker->adjustSize();
     marker->setVisible(true);
