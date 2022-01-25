@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     QLabel *marker = new QLabel(mpMapCanvas);
     marker->setPixmap(QPixmap(":/mapMarker.png"));
 
-    // Lay our widgets out in the main window
+    //Lay our widgets out in the main window
     mpLayout = new QVBoxLayout(frameMap);
     mpLayout->addWidget(mpMapCanvas);
 
