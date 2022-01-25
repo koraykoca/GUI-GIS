@@ -24,8 +24,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     setupUi(this);
 
     // Instantiate Provider Registry
-    QString myPluginsDir = "/home/koray/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
-    //QString myPluginsDir = "/home/unibw/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
+    //QString myPluginsDir = "/home/koray/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
+    QString myPluginsDir = "/home/unibw/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
 
     crsSrc = QgsCoordinateReferenceSystem("EPSG:25832");  // UTM Zone 32
     crsDest = QgsCoordinateReferenceSystem("EPSG:4326");  // WGS 84
@@ -47,8 +47,9 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
 
     mpClickPoint = new QgsMapToolEmitPoint(mpMapCanvas);
 
-    QLabel *marker = new QLabel(mpMapCanvas);
-    marker->setPixmap(QPixmap(":/mapMarker.png"));
+//    QgsVertexMarker *marker2 = new QgsVertexMarker(mpMapCanvas);  // to create a marker using the class into the canvas
+//    marker2->setIconType(QgsVertexMarker::ICON_X);
+//    marker2->setVisible(true);
 
     //Lay our widgets out in the main window
     mpLayout = new QVBoxLayout(frameMap);
@@ -128,7 +129,6 @@ void MainWindow::selectCoord(QgsPointXY point)
     QLabel *marker = new QLabel(mpMapCanvas);
     marker->setPixmap(QPixmap(":/mapMarker.png"));
 
-    //marker->setGeometry(mpMapCanvas->geometry());
     marker->move(point.x(), point.y());
     marker->adjustSize();
     marker->setVisible(true);
@@ -183,8 +183,8 @@ void MainWindow::addLayer1()
 
     if (layers.contains(ptrLayer1) == false){
 
-        QString myLayerPath  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
-        //QString myLayerPath  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
+        //QString myLayerPath  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
+        QString myLayerPath  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
         QString myLayerBaseName = "geb01_f";
         QString myProviderName = "ogr";
 
@@ -230,8 +230,8 @@ void MainWindow::addLayer2()
 
     if (layers.contains(ptrLayer2) == false){
 
-        QString myLayerPath2  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
-        //QString myLayerPath2  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
+        //QString myLayerPath2  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
+        QString myLayerPath2  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
         QString myLayerBaseName2 = "ver01_l";
         QString myProviderName = "ogr";
 
@@ -276,8 +276,8 @@ void MainWindow::addLayer3()
 
     if (layers.contains(ptrLayer3) == false){
 
-        QString myLayerPath3  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
-        //QString myLayerPath3  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
+        //QString myLayerPath3  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
+        QString myLayerPath3  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
         QString myLayerBaseName3 = "veg02_f";
         QString myProviderName = "ogr";
 
@@ -318,7 +318,8 @@ void MainWindow::addLayer4()
 {
     if (layers.contains(ptrLayer4) == false){
 
-        QString myLayerPath4  = "/home/koray/work-unibw/2021_11_Airspace_Germany.txt";
+        //QString myLayerPath4  = "/home/koray/work-unibw/2021_11_Airspace_Germany.txt";
+        QString myLayerPath4  = "/home/unibw/dev/cpp/2021_11_Airspace_Germany.txt";
         QString myLayerBaseName4 = "2021_11_Airspace_Germany — airspaces";
         QString myProviderName = "ogr";
 

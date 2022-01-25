@@ -6,6 +6,11 @@
 #include <qgsmaptool.h>
 #include <qgsmaptoolemitpoint.h>
 #include "qgscoordinatereferencesystem.h"
+#include <qgsvertexmarker.h>
+
+#include <qgslabeling.h>
+#include <qgslabelfeature.h>
+#include <qgsfield.h>
 
 //QT Includes
 #include <QtGui>
@@ -54,6 +59,7 @@ private:
     QgsCoordinateReferenceSystem crsDest;
     QgsCoordinateTransform mTransform;
     QLabel *marker;
+    QgsVertexMarker *marker2;
     QgsVectorLayer * ptrLayer1 = nullptr;
     QgsVectorLayer * ptrLayer2 = nullptr;
     QgsVectorLayer * ptrLayer3 = nullptr;
