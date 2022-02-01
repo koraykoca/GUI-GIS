@@ -120,10 +120,13 @@ void MainWindow::showCoord(QgsPointXY point)
 void MainWindow::selectCoord(QgsPointXY point)
 {
     if (layers.contains(ptrLayer4) == false){
-        point = mTransform.transform(point);
+        QgsPointXY point_trans = point;
+        point_trans = mTransform.transform(point_trans);
+        textBrowser->setText(QString::number(point_trans.y(), 'f', 4) + " " + QString::number(point_trans.x(), 'f', 4));
     }
-
-    textBrowser->setText(QString::number(point.y(), 'f', 4) + " " + QString::number(point.x(), 'f', 4));
+    else{
+        textBrowser->setText(QString::number(point.y(), 'f', 4) + " " + QString::number(point.x(), 'f', 4));
+    }
 
     QLabel *marker = new QLabel(mpMapCanvas);
     marker->setPixmap(QPixmap(":/mapMarker.png"));
