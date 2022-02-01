@@ -9,6 +9,7 @@
 #include <qgsvectorlayer.h>
 #include <qgsmapcanvas.h>
 #include <qgssymbol.h>
+#include <qgsmapcanvasitem.h>
 
 // QGIS Map tools
 #include "qgsmaptoolpan.h"
@@ -17,6 +18,7 @@
 #include <qtoolbutton.h>
 #include <qlist.h>
 #include <qpoint.h>
+#include <QGraphicsItem>
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     : QMainWindow(parent,fl)
@@ -47,10 +49,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     mpMapCanvas->setMouseTracking(true);
 
     mpClickPoint = new QgsMapToolEmitPoint(mpMapCanvas);
-
-//    QgsVertexMarker *marker2 = new QgsVertexMarker(mpMapCanvas);  // to create a marker using the class into the canvas
-//    marker2->setIconType(QgsVertexMarker::ICON_X);
-//    marker2->setVisible(true);
 
     //Lay our widgets out in the main window
     mpLayout = new QVBoxLayout(frameMap);
@@ -129,16 +127,64 @@ void MainWindow::selectCoord(QgsPointXY point)
 
     QLabel *marker = new QLabel(mpMapCanvas);
     marker->setPixmap(QPixmap(":/mapMarker.png"));
-
-    QPoint sPoint(float(point.x()), float(point.y()));
-    point = mpMapCanvas->mapToGlobal(sPoint);
+//    marker->move(point.x(), point.y());
+//    marker->show();
 
     qDebug() << "x:" << point.x() << "y:" << point.y();
-    marker->move(point.x(), point.y());
-    marker->adjustSize();
-    marker->setVisible(true);
+
+    qreal x = point.x();
+    qreal y = point.y();
+    mpMapCanvas->getCoordinateTransform()->transformInPlace(x, y);
+    QPointF pointf = QPointF(x , y);
+
+    marker->move(pointf.x(), pointf.y());
     marker->show();
 
+    qDebug() << "x:" << pointf.x() << "y:" << pointf.y();
+
+//    QPoint pointq = pointf.toPoint();
+
+//    qDebug() << "x:" << pointq.x() << "y:" << pointq.y();
+
+//    QPoint pos = mpMapCanvas->mapToGlobal(pointq);
+//    qDebug() << "x:" << pos.x() << "y:" << pos.y();
+//    marker->move(pos.x(), pos.y());
+//    marker->show();
+
+
+
+//QgsLabeling * qmarker = new QgsLabeling(mpMapCanvas);
+
+//    QPoint sPoint;
+//    sPoint.setX(pointf.rx());
+//    sPoint.setY(float(pointf.y()));
+
+//    qDebug() << "x:" << sPoint.x() << "y:" << sPoint.y();
+
+//    QPoint viewP = mpMapCanvas->mapFromScene(pointf);
+
+//    qDebug() << "x:" << viewP.x() << "y:" << viewP.y();
+
+// QPoint points = mpMapCanvas->mapToGlobal(point);
+
+//    qDebug() << "x:" << points.x() << "y:" << points.y();
+
+
+
+    //marker->move();
+
+    //QgsPointXY pointc = QgsMapCanvas::setCenter(point);
+
+    //qDebug() << "x:" << qPoint.x() << "y:" << qPoint.y();
+    //marker->setVisible(true);
+    //
+
+//    QgsVertexMarker *marker2 = new QgsVertexMarker(mpMapCanvas);  // to create a marker using the class into the canvas
+//    marker2->setIconType(QgsVertexMarker::ICON_X);
+//    marker2->setVisible(true);
+//    marker2->setCenter(point);
+
+//    qDebug() << "x:" << marker2->x() << "y:" << marker2->y();
 }
 
 void MainWindow::putMarker()
