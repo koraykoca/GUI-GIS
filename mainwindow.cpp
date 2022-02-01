@@ -40,6 +40,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
 
     mpMapCanvas = new QgsMapCanvas();  // QgsMapCanvas to visualize QgsMapLayers like QgsVectorLayer or QgsRasterLayer
 
+    marker = new QLabel(mpMapCanvas);
+    marker->setPixmap(QPixmap(":/mapMarker.png"));
+    marker->hide();
+
     mpMapCanvas->enableAntiAliasing(true);
     mpMapCanvas->setCanvasColor(QColor(255, 255, 255));
     mpMapCanvas->freeze(false);
@@ -128,8 +132,7 @@ void MainWindow::selectCoord(QgsPointXY point)
         textBrowser->setText(QString::number(point.y(), 'f', 4) + " " + QString::number(point.x(), 'f', 4));
     }
 
-    QLabel *marker = new QLabel(mpMapCanvas);
-    marker->setPixmap(QPixmap(":/mapMarker.png"));
+
 //    marker->move(point.x(), point.y());
 //    marker->show();
 
