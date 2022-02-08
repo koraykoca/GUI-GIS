@@ -40,6 +40,28 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
 
     mpMapCanvas = new QgsMapCanvas();  // QgsMapCanvas to visualize QgsMapLayers like QgsVectorLayer or QgsRasterLayer
 
+    marker = new QLabel(mpMapCanvas);
+    QPixmap pixmap = QPixmap(":/mapMarker.png");
+    marker->move(50,50);
+
+    QSize size = pixmap.size();
+    QPixmap pixmapc = pixmap;
+    // QPixmap pixmapc = pixmap.scaled(size.width()*2, size.width()*2);  // to prevent the cutting effect
+
+    pixmapc.fill(QColor::fromRgb(100, 100, 100, 100));
+    //pixmap.transformed(QTransform().rotate(12), Qt::SmoothTransformation);
+    painter = new QPainter(&pixmapc);
+    QTransform transform;
+    transform.translate(-size.width()/2, 0);
+    painter->setTransform(transform);
+    painter->drawPixmap(0,0, pixmap);
+    marker->setPixmap(pixmapc);
+    marker->show();
+
+//    painter->setRenderHint(QPainter::Antialiasing);
+//    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+//    painter->setRenderHint(QPainter::HighQualityAntialiasing);
+
     mpMapCanvas->enableAntiAliasing(true);
     mpMapCanvas->setCanvasColor(QColor(255, 255, 255));
     mpMapCanvas->freeze(false);
@@ -53,6 +75,9 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     //Lay our widgets out in the main window
     mpLayout = new QVBoxLayout(frameMap);
     mpLayout->addWidget(mpMapCanvas);
+
+    setAcceptDrops(true);
+    mpMapCanvas->setAcceptDrops(true);
 
     //create the action behaviours
     connect(mpActionPan, SIGNAL(triggered()), this, SLOT(panMode()));
@@ -109,6 +134,24 @@ MainWindow::~MainWindow()
   delete checkBox_3;
 }
 
+void MainWindow::dragEnterEvent(QDragEnterEvent *event){
+    setBackgroundRole(QPalette::Highlight);
+    event->acceptProposedAction();
+}
+
+void MainWindow::dragMoveEvent(QDragMoveEvent *event){
+    event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent *event){
+    const QMimeData *mimeData = event->mimeData();
+    qDebug() << "dropped" << event;
+}
+
+void MainWindow::dragLeaveEvent(QDragLeaveEvent *event){
+    event->accept();
+}
+
 void MainWindow::showCoord(QgsPointXY point)
 {
     if (layers.contains(ptrLayer4) == false){
@@ -128,13 +171,6 @@ void MainWindow::selectCoord(QgsPointXY point)
         textBrowser->setText(QString::number(point.y(), 'f', 4) + " " + QString::number(point.x(), 'f', 4));
     }
 
-    QLabel *marker = new QLabel(mpMapCanvas);
-    marker->setPixmap(QPixmap(":/mapMarker.png"));
-//    marker->move(point.x(), point.y());
-//    marker->show();
-
-    qDebug() << "x:" << point.x() << "y:" << point.y();
-
     qreal x = point.x();
     qreal y = point.y();
     mpMapCanvas->getCoordinateTransform()->transformInPlace(x, y);
@@ -142,52 +178,6 @@ void MainWindow::selectCoord(QgsPointXY point)
 
     marker->move(pointf.x(), pointf.y());
     marker->show();
-
-    qDebug() << "x:" << pointf.x() << "y:" << pointf.y();
-
-//    QPoint pointq = pointf.toPoint();
-
-//    qDebug() << "x:" << pointq.x() << "y:" << pointq.y();
-
-//    QPoint pos = mpMapCanvas->mapToGlobal(pointq);
-//    qDebug() << "x:" << pos.x() << "y:" << pos.y();
-//    marker->move(pos.x(), pos.y());
-//    marker->show();
-
-
-
-//QgsLabeling * qmarker = new QgsLabeling(mpMapCanvas);
-
-//    QPoint sPoint;
-//    sPoint.setX(pointf.rx());
-//    sPoint.setY(float(pointf.y()));
-
-//    qDebug() << "x:" << sPoint.x() << "y:" << sPoint.y();
-
-//    QPoint viewP = mpMapCanvas->mapFromScene(pointf);
-
-//    qDebug() << "x:" << viewP.x() << "y:" << viewP.y();
-
-// QPoint points = mpMapCanvas->mapToGlobal(point);
-
-//    qDebug() << "x:" << points.x() << "y:" << points.y();
-
-
-
-    //marker->move();
-
-    //QgsPointXY pointc = QgsMapCanvas::setCenter(point);
-
-    //qDebug() << "x:" << qPoint.x() << "y:" << qPoint.y();
-    //marker->setVisible(true);
-    //
-
-//    QgsVertexMarker *marker2 = new QgsVertexMarker(mpMapCanvas);  // to create a marker using the class into the canvas
-//    marker2->setIconType(QgsVertexMarker::ICON_X);
-//    marker2->setVisible(true);
-//    marker2->setCenter(point);
-
-//    qDebug() << "x:" << marker2->x() << "y:" << marker2->y();
 }
 
 void MainWindow::putMarker()
@@ -216,6 +206,7 @@ void MainWindow::zoomInMode()
         mpMapCanvas->unsetMapTool(mpZoomInTool);
         mpMapCanvas->setMapTool(mpClickPoint);
     }
+
 }
 
 void MainWindow::zoomOutMode()

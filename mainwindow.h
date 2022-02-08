@@ -29,10 +29,9 @@ class MainWindow : public QMainWindow, private Ui::MainWindowBase
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
+    MainWindow(QWidget* parent = nullptr, Qt::WindowFlags fl = Qt::WindowFlags());
     ~MainWindow();
     QList <QgsMapLayer *> layers;
-    QList <QString> tools;
 
 public slots:
     void zoomInMode();
@@ -45,6 +44,12 @@ public slots:
     void showCoord(QgsPointXY);
     void selectCoord(QgsPointXY);
     void putMarker();
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *) override;
+    void dropEvent(QDropEvent *) override;
+    void dragMoveEvent(QDragMoveEvent *) override;
+    void dragLeaveEvent(QDragLeaveEvent *) override;
 
 private:
     QgsMapCanvas * mpMapCanvas;
@@ -64,6 +69,11 @@ private:
     QgsVectorLayer * ptrLayer2 = nullptr;
     QgsVectorLayer * ptrLayer3 = nullptr;
     QgsVectorLayer * ptrLayer4 = nullptr;
+
+    QPainter * painter;
+
+signals:
+    void changed(const QMimeData *mimeData = nullptr);
 };
 
 #endif // MAINWINDOW_H
