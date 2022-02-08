@@ -41,7 +41,19 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     mpMapCanvas = new QgsMapCanvas();  // QgsMapCanvas to visualize QgsMapLayers like QgsVectorLayer or QgsRasterLayer
 
     marker = new QLabel(mpMapCanvas);
-    marker->setPixmap(QPixmap(":/mapMarker.png"));
+    QPixmap pixmap = QPixmap(":/mapMarker.png");
+
+    QPixmap pixmapc = pixmap;
+    pixmapc.fill(QColor::fromRgb(0, 0, 0, 0));
+    painter = new QPainter(&pixmapc);
+    QSize size = pixmap.size();
+    //painter->translate(-size.height()/2,-size.width()/2);
+    painter->drawPixmap(-size.width()/2, -size.height()/2, pixmap);
+    painter->end();
+    delete painter;
+
+    //pixmap.transformed(QTransform().translate(-50.0,50.0), Qt::FastTransformation);
+    marker->setPixmap(pixmapc);
     marker->hide();
 
     mpMapCanvas->enableAntiAliasing(true);
@@ -132,12 +144,6 @@ void MainWindow::selectCoord(QgsPointXY point)
         textBrowser->setText(QString::number(point.y(), 'f', 4) + " " + QString::number(point.x(), 'f', 4));
     }
 
-
-//    marker->move(point.x(), point.y());
-//    marker->show();
-
-    qDebug() << "x:" << point.x() << "y:" << point.y();
-
     qreal x = point.x();
     qreal y = point.y();
     mpMapCanvas->getCoordinateTransform()->transformInPlace(x, y);
@@ -145,52 +151,6 @@ void MainWindow::selectCoord(QgsPointXY point)
 
     marker->move(pointf.x(), pointf.y());
     marker->show();
-
-    qDebug() << "x:" << pointf.x() << "y:" << pointf.y();
-
-//    QPoint pointq = pointf.toPoint();
-
-//    qDebug() << "x:" << pointq.x() << "y:" << pointq.y();
-
-//    QPoint pos = mpMapCanvas->mapToGlobal(pointq);
-//    qDebug() << "x:" << pos.x() << "y:" << pos.y();
-//    marker->move(pos.x(), pos.y());
-//    marker->show();
-
-
-
-//QgsLabeling * qmarker = new QgsLabeling(mpMapCanvas);
-
-//    QPoint sPoint;
-//    sPoint.setX(pointf.rx());
-//    sPoint.setY(float(pointf.y()));
-
-//    qDebug() << "x:" << sPoint.x() << "y:" << sPoint.y();
-
-//    QPoint viewP = mpMapCanvas->mapFromScene(pointf);
-
-//    qDebug() << "x:" << viewP.x() << "y:" << viewP.y();
-
-// QPoint points = mpMapCanvas->mapToGlobal(point);
-
-//    qDebug() << "x:" << points.x() << "y:" << points.y();
-
-
-
-    //marker->move();
-
-    //QgsPointXY pointc = QgsMapCanvas::setCenter(point);
-
-    //qDebug() << "x:" << qPoint.x() << "y:" << qPoint.y();
-    //marker->setVisible(true);
-    //
-
-//    QgsVertexMarker *marker2 = new QgsVertexMarker(mpMapCanvas);  // to create a marker using the class into the canvas
-//    marker2->setIconType(QgsVertexMarker::ICON_X);
-//    marker2->setVisible(true);
-//    marker2->setCenter(point);
-
-//    qDebug() << "x:" << marker2->x() << "y:" << marker2->y();
 }
 
 void MainWindow::putMarker()
@@ -219,6 +179,7 @@ void MainWindow::zoomInMode()
         mpMapCanvas->unsetMapTool(mpZoomInTool);
         mpMapCanvas->setMapTool(mpClickPoint);
     }
+
 }
 
 void MainWindow::zoomOutMode()

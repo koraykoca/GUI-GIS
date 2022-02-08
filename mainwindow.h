@@ -29,10 +29,9 @@ class MainWindow : public QMainWindow, private Ui::MainWindowBase
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
+    MainWindow(QWidget* parent = nullptr, Qt::WindowFlags fl = Qt::WindowFlags());
     ~MainWindow();
     QList <QgsMapLayer *> layers;
-    QList <QString> tools;
 
 public slots:
     void zoomInMode();
@@ -64,6 +63,8 @@ private:
     QgsVectorLayer * ptrLayer2 = nullptr;
     QgsVectorLayer * ptrLayer3 = nullptr;
     QgsVectorLayer * ptrLayer4 = nullptr;
+
+    QPainter * painter;
 };
 
 #endif // MAINWINDOW_H
