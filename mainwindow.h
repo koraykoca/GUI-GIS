@@ -45,6 +45,12 @@ public slots:
     void selectCoord(QgsPointXY);
     void putMarker();
 
+protected:
+    void dragEnterEvent(QDragEnterEvent *) override;
+    void dropEvent(QDropEvent *) override;
+    void dragMoveEvent(QDragMoveEvent *) override;
+    void dragLeaveEvent(QDragLeaveEvent *) override;
+
 private:
     QgsMapCanvas * mpMapCanvas;
     QVBoxLayout  * mpLayout;
@@ -65,6 +71,9 @@ private:
     QgsVectorLayer * ptrLayer4 = nullptr;
 
     QPainter * painter;
+
+signals:
+    void changed(const QMimeData *mimeData = nullptr);
 };
 
 #endif // MAINWINDOW_H

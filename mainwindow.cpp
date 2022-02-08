@@ -42,19 +42,25 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
 
     marker = new QLabel(mpMapCanvas);
     QPixmap pixmap = QPixmap(":/mapMarker.png");
+    marker->move(50,50);
 
-    QPixmap pixmapc = pixmap;
-    pixmapc.fill(QColor::fromRgb(0, 0, 0, 0));
-    painter = new QPainter(&pixmapc);
     QSize size = pixmap.size();
-    //painter->translate(-size.height()/2,-size.width()/2);
-    painter->drawPixmap(-size.width()/2, -size.height()/2, pixmap);
-    painter->end();
-    delete painter;
+    QPixmap pixmapc = pixmap;
+    // QPixmap pixmapc = pixmap.scaled(size.width()*2, size.width()*2);  // to prevent the cutting effect
 
-    //pixmap.transformed(QTransform().translate(-50.0,50.0), Qt::FastTransformation);
+    pixmapc.fill(QColor::fromRgb(100, 100, 100, 100));
+    //pixmap.transformed(QTransform().rotate(12), Qt::SmoothTransformation);
+    painter = new QPainter(&pixmapc);
+    QTransform transform;
+    transform.translate(-size.width()/2, 0);
+    painter->setTransform(transform);
+    painter->drawPixmap(0,0, pixmap);
     marker->setPixmap(pixmapc);
-    marker->hide();
+    marker->show();
+
+//    painter->setRenderHint(QPainter::Antialiasing);
+//    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+//    painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
     mpMapCanvas->enableAntiAliasing(true);
     mpMapCanvas->setCanvasColor(QColor(255, 255, 255));
@@ -69,6 +75,9 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     //Lay our widgets out in the main window
     mpLayout = new QVBoxLayout(frameMap);
     mpLayout->addWidget(mpMapCanvas);
+
+    setAcceptDrops(true);
+    mpMapCanvas->setAcceptDrops(true);
 
     //create the action behaviours
     connect(mpActionPan, SIGNAL(triggered()), this, SLOT(panMode()));
@@ -123,6 +132,24 @@ MainWindow::~MainWindow()
   delete checkBox;
   delete checkBox_2;
   delete checkBox_3;
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event){
+    setBackgroundRole(QPalette::Highlight);
+    event->acceptProposedAction();
+}
+
+void MainWindow::dragMoveEvent(QDragMoveEvent *event){
+    event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent *event){
+    const QMimeData *mimeData = event->mimeData();
+    qDebug() << "dropped" << event;
+}
+
+void MainWindow::dragLeaveEvent(QDragLeaveEvent *event){
+    event->accept();
 }
 
 void MainWindow::showCoord(QgsPointXY point)
