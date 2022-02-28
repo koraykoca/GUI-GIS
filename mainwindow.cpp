@@ -20,6 +20,8 @@
 #include <qpoint.h>
 #include <QGraphicsItem>
 
+QString ProviderName = "ogr";
+
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     : QMainWindow(parent,fl)
 {
@@ -29,6 +31,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     // Instantiate Provider Registry
     //QString myPluginsDir = "/home/koray/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
     QString myPluginsDir = "/home/unibw/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
+
 
     crsSrc = QgsCoordinateReferenceSystem("EPSG:25832");  // UTM Zone 32
     crsDest = QgsCoordinateReferenceSystem("EPSG:4326");  // WGS 84
@@ -48,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     QPixmap pixmapc = pixmap;
     //QPixmap pixmapc = pixmap.scaled(size.width()*2, size.width()*2);  // to prevent the cutting effect
 
-    pixmapc.fill(QColor::fromRgb(100, 100, 100, 100));
+    pixmapc.fill(QColor::fromRgb(0, 0, 0, 0));
     //pixmapc = pixmap.transformed(QTransform().rotate(12), Qt::SmoothTransformation);
     painter = new QPainter(&pixmapc);
     QTransform transform;
@@ -83,9 +86,9 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(mpActionPan, SIGNAL(triggered()), this, SLOT(panMode()));
     connect(mpActionZoomIn, SIGNAL(triggered()), this, SLOT(zoomInMode()));
     connect(mpActionZoomOut, SIGNAL(triggered()), this, SLOT(zoomOutMode()));
-    connect(actionMap_1, SIGNAL(triggered()), this, SLOT(addLayer1(QString, QString)));
+    connect(actionMap_1, SIGNAL(triggered()), this, SLOT(addLayer1(QString,QString,QString)));
     connect(actionMap_2, SIGNAL(triggered()), this, SLOT(addLayer2()));
-    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(addLayer1(QString, QString)));
+    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(addLayer1(QString,QString,QString)));
     connect(checkBox_2, SIGNAL(stateChanged(int)), this, SLOT(addLayer2()));
     connect(checkBox_3, SIGNAL(stateChanged(int)), this, SLOT(addLayer3()));
     connect(checkBox_4, SIGNAL(stateChanged(int)), this, SLOT(addLayer4()));
@@ -157,7 +160,7 @@ void MainWindow::dropEvent(QDropEvent *event){
     int idx_e = dataPath.lastIndexOf('.');  // get index of last . in the path
     QString name = dataPath.mid(idx_s + 1, idx_e - idx_s - 1);  // get the name of the file
     // qDebug() << "data name:" << name;
-    MainWindow::addLayer1(dataUrl.path(), name);
+    MainWindow::addLayer1(dataUrl.path(), name, ProviderName);
 }
 
 void MainWindow::dragLeaveEvent(QDragLeaveEvent *event){
@@ -232,11 +235,11 @@ void MainWindow::zoomOutMode()
    }
 }
 
-void MainWindow::addLayer1(QString myLayerPath, QString myLayerBaseName)
+void MainWindow::addLayer1(QString myLayerPath, QString myLayerBaseName, QString myProviderName)
 {
-    if (layers.contains(ptrLayer4) == true){
-        layers.removeOne(ptrLayer4);
-    }
+//    if (layers.contains(ptrLayer4) == true){
+//        layers.removeOne(ptrLayer4);
+//    }
 
     //if (layers.contains(ptrLayer1) == false){
     if (true){
@@ -244,7 +247,7 @@ void MainWindow::addLayer1(QString myLayerPath, QString myLayerBaseName)
         //QString myLayerPath  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
         //myLayerPath  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
         //myLayerBaseName = "geb01_f";
-        QString myProviderName = "ogr";
+        //QString myProviderName = "ogr";
 
         QgsVectorLayer * mypLayer = new QgsVectorLayer(myLayerPath, myLayerBaseName, myProviderName);
 

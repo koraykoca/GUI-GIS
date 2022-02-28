@@ -23,6 +23,7 @@
 //Local Includes
 #include <ui_mainwindowbase.h>
 
+extern QString ProviderName;
 
 class MainWindow : public QMainWindow, private Ui::MainWindowBase
 {
@@ -37,7 +38,7 @@ public slots:
     void zoomInMode();
     void zoomOutMode();
     void panMode();
-    void addLayer1(QString, QString);
+    void addLayer1(QString, QString, QString);
     void addLayer2();
     void addLayer3();
     void addLayer4();
