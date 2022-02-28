@@ -46,17 +46,17 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
 
     QSize size = pixmap.size();
     QPixmap pixmapc = pixmap;
-    // QPixmap pixmapc = pixmap.scaled(size.width()*2, size.width()*2);  // to prevent the cutting effect
+    //QPixmap pixmapc = pixmap.scaled(size.width()*2, size.width()*2);  // to prevent the cutting effect
 
     pixmapc.fill(QColor::fromRgb(100, 100, 100, 100));
-    //pixmap.transformed(QTransform().rotate(12), Qt::SmoothTransformation);
+    //pixmapc = pixmap.transformed(QTransform().rotate(12), Qt::SmoothTransformation);
     painter = new QPainter(&pixmapc);
     QTransform transform;
     transform.translate(-size.width()/2, 0);
     painter->setTransform(transform);
     painter->drawPixmap(0,0, pixmap);
     marker->setPixmap(pixmapc);
-    marker->show();
+    marker->hide();
 
 //    painter->setRenderHint(QPainter::Antialiasing);
 //    painter->setRenderHint(QPainter::SmoothPixmapTransform);
@@ -83,9 +83,9 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(mpActionPan, SIGNAL(triggered()), this, SLOT(panMode()));
     connect(mpActionZoomIn, SIGNAL(triggered()), this, SLOT(zoomInMode()));
     connect(mpActionZoomOut, SIGNAL(triggered()), this, SLOT(zoomOutMode()));
-    connect(actionMap_1, SIGNAL(triggered()), this, SLOT(addLayer1()));
+    connect(actionMap_1, SIGNAL(triggered()), this, SLOT(addLayer1(QString, QString)));
     connect(actionMap_2, SIGNAL(triggered()), this, SLOT(addLayer2()));
-    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(addLayer1()));
+    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(addLayer1(QString, QString)));
     connect(checkBox_2, SIGNAL(stateChanged(int)), this, SLOT(addLayer2()));
     connect(checkBox_3, SIGNAL(stateChanged(int)), this, SLOT(addLayer3()));
     connect(checkBox_4, SIGNAL(stateChanged(int)), this, SLOT(addLayer4()));
@@ -117,6 +117,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
 
     mpZoomOutTool = new QgsMapToolZoom(mpMapCanvas, true ); //true = zoom out
     mpZoomOutTool->setAction(mpActionZoomOut);
+
+    setAcceptDrops(true);
 }
 
 MainWindow::~MainWindow()
@@ -132,10 +134,14 @@ MainWindow::~MainWindow()
   delete checkBox;
   delete checkBox_2;
   delete checkBox_3;
+  delete marker;
+  delete painter;
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event){
     setBackgroundRole(QPalette::Highlight);
+//    if (event->mimeData()->hasFormat("x-special/gnome-icon-list"))
+//        event->acceptProposedAction();
     event->acceptProposedAction();
 }
 
@@ -145,7 +151,13 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event){
 
 void MainWindow::dropEvent(QDropEvent *event){
     const QMimeData *mimeData = event->mimeData();
-    qDebug() << "dropped" << event;
+    QUrl dataUrl = mimeData->urls().takeFirst();  // take url from list
+    QString dataPath = dataUrl.path();  // or dataUrl.toLocalFile()
+    int idx_s = dataPath.lastIndexOf('/');  // get index of last / in the path
+    int idx_e = dataPath.lastIndexOf('.');  // get index of last . in the path
+    QString name = dataPath.mid(idx_s + 1, idx_e - idx_s - 1);  // get the name of the file
+    // qDebug() << "data name:" << name;
+    MainWindow::addLayer1(dataUrl.path(), name);
 }
 
 void MainWindow::dragLeaveEvent(QDragLeaveEvent *event){
@@ -220,17 +232,18 @@ void MainWindow::zoomOutMode()
    }
 }
 
-void MainWindow::addLayer1()
+void MainWindow::addLayer1(QString myLayerPath, QString myLayerBaseName)
 {
     if (layers.contains(ptrLayer4) == true){
         layers.removeOne(ptrLayer4);
     }
 
-    if (layers.contains(ptrLayer1) == false){
+    //if (layers.contains(ptrLayer1) == false){
+    if (true){
 
         //QString myLayerPath  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
-        QString myLayerPath  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
-        QString myLayerBaseName = "geb01_f";
+        //myLayerPath  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
+        //myLayerBaseName = "geb01_f";
         QString myProviderName = "ogr";
 
         QgsVectorLayer * mypLayer = new QgsVectorLayer(myLayerPath, myLayerBaseName, myProviderName);

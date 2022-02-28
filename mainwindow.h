@@ -37,7 +37,7 @@ public slots:
     void zoomInMode();
     void zoomOutMode();
     void panMode();
-    void addLayer1();
+    void addLayer1(QString, QString);
     void addLayer2();
     void addLayer3();
     void addLayer4();
@@ -64,7 +64,6 @@ private:
     QgsCoordinateReferenceSystem crsDest;
     QgsCoordinateTransform mTransform;
     QLabel *marker;
-    QgsVertexMarker *marker2;
     QgsVectorLayer * ptrLayer1 = nullptr;
     QgsVectorLayer * ptrLayer2 = nullptr;
     QgsVectorLayer * ptrLayer3 = nullptr;
