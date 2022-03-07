@@ -15,10 +15,11 @@
 #include "qgsmaptoolpan.h"
 #include "qgsmaptoolzoom.h"
 
-#include <qtoolbutton.h>
 #include <qlist.h>
 #include <qpoint.h>
 #include <QGraphicsItem>
+
+QString ProviderName = "ogr";
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     : QMainWindow(parent,fl)
@@ -40,27 +41,20 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
 
     mpMapCanvas = new QgsMapCanvas();  // QgsMapCanvas to visualize QgsMapLayers like QgsVectorLayer or QgsRasterLayer
 
-    marker = new QLabel(mpMapCanvas);
+    scene = mpMapCanvas->scene();
+
     QPixmap pixmap = QPixmap(":/mapMarker.png");
-    marker->move(50,50);
-
+    icon = new QGraphicsPixmapItem(pixmap);
+    scene->addItem(icon);
+    qDebug() << "icon x:" << icon->x() << "icon y:" << icon->y() << icon->boundingRect();
     QSize size = pixmap.size();
-    QPixmap pixmapc = pixmap;
-    //QPixmap pixmapc = pixmap.scaled(size.width()*2, size.width()*2);  // to prevent the cutting effect
-
-    pixmapc.fill(QColor::fromRgb(100, 100, 100, 100));
-    //pixmapc = pixmap.transformed(QTransform().rotate(12), Qt::SmoothTransformation);
-    painter = new QPainter(&pixmapc);
     QTransform transform;
-    transform.translate(-size.width()/2, 0);
-    painter->setTransform(transform);
-    painter->drawPixmap(0,0, pixmap);
-    marker->setPixmap(pixmapc);
-    marker->hide();
+    transform.translate(-size.width()/2, -size.height());
+    icon->setTransform(transform);
+    icon->setFlag(QGraphicsPixmapItem::ItemIgnoresTransformations,true);
+    icon->hide();
 
-//    painter->setRenderHint(QPainter::Antialiasing);
-//    painter->setRenderHint(QPainter::SmoothPixmapTransform);
-//    painter->setRenderHint(QPainter::HighQualityAntialiasing);
+    //pixmapc = pixmap.transformed(QTransform().rotate(12), Qt::SmoothTransformation);
 
     mpMapCanvas->enableAntiAliasing(true);
     mpMapCanvas->setCanvasColor(QColor(255, 255, 255));
@@ -83,16 +77,16 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(mpActionPan, SIGNAL(triggered()), this, SLOT(panMode()));
     connect(mpActionZoomIn, SIGNAL(triggered()), this, SLOT(zoomInMode()));
     connect(mpActionZoomOut, SIGNAL(triggered()), this, SLOT(zoomOutMode()));
-    connect(actionMap_1, SIGNAL(triggered()), this, SLOT(addLayer1(QString, QString)));
+    connect(actionMap_1, SIGNAL(triggered()), this, SLOT(addLayer1(QString,QString,QString)));
     connect(actionMap_2, SIGNAL(triggered()), this, SLOT(addLayer2()));
-    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(addLayer1(QString, QString)));
+    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(addLayer1(QString,QString,QString)));
     connect(checkBox_2, SIGNAL(stateChanged(int)), this, SLOT(addLayer2()));
     connect(checkBox_3, SIGNAL(stateChanged(int)), this, SLOT(addLayer3()));
     connect(checkBox_4, SIGNAL(stateChanged(int)), this, SLOT(addLayer4()));
     connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(selectCoord(QgsPointXY)));
     connect(mpMapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCoord(QgsPointXY)));
 
-    QToolButton* toolButton = new QToolButton();  // local variable
+    toolButton = new QToolButton();  // local variable
     toolButton->setMenu(menuAdd_Layer);
     toolButton->setIcon(QIcon(":/mActionAddLayer.png"));
     toolButton->setPopupMode(QToolButton::InstantPopup);
@@ -134,8 +128,9 @@ MainWindow::~MainWindow()
   delete checkBox;
   delete checkBox_2;
   delete checkBox_3;
-  delete marker;
-  delete painter;
+  delete mpClickPoint;
+  delete toolButton;
+  delete icon;
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event){
@@ -157,7 +152,7 @@ void MainWindow::dropEvent(QDropEvent *event){
     int idx_e = dataPath.lastIndexOf('.');  // get index of last . in the path
     QString name = dataPath.mid(idx_s + 1, idx_e - idx_s - 1);  // get the name of the file
     // qDebug() << "data name:" << name;
-    MainWindow::addLayer1(dataUrl.path(), name);
+    MainWindow::addLayer1(dataUrl.path(), name, ProviderName);
 }
 
 void MainWindow::dragLeaveEvent(QDragLeaveEvent *event){
@@ -186,16 +181,9 @@ void MainWindow::selectCoord(QgsPointXY point)
     qreal x = point.x();
     qreal y = point.y();
     mpMapCanvas->getCoordinateTransform()->transformInPlace(x, y);
-    QPointF pointf = QPointF(x , y);
-
-    marker->move(pointf.x(), pointf.y());
-    marker->show();
-}
-
-void MainWindow::putMarker()
-{
-    QMainWindow::statusBar()->showMessage(tr("Clicked"));
-
+    pointf = QPointF(x , y);
+    icon->setPos(pointf.x(), pointf.y());
+    icon->show();
 }
 
 void MainWindow::panMode()
@@ -213,12 +201,13 @@ void MainWindow::zoomInMode()
 {
     if (mpActionZoomIn->isChecked()){
         mpMapCanvas->setMapTool(mpZoomInTool);
+        icon->setPos(pointf.x(), pointf.y());
     }
     else{
         mpMapCanvas->unsetMapTool(mpZoomInTool);
         mpMapCanvas->setMapTool(mpClickPoint);
+         qDebug() << "icon pos:" << icon->pos();
     }
-
 }
 
 void MainWindow::zoomOutMode()
@@ -232,11 +221,11 @@ void MainWindow::zoomOutMode()
    }
 }
 
-void MainWindow::addLayer1(QString myLayerPath, QString myLayerBaseName)
+void MainWindow::addLayer1(QString myLayerPath, QString myLayerBaseName, QString myProviderName)
 {
-    if (layers.contains(ptrLayer4) == true){
-        layers.removeOne(ptrLayer4);
-    }
+//    if (layers.contains(ptrLayer4) == true){
+//        layers.removeOne(ptrLayer4);
+//    }
 
     //if (layers.contains(ptrLayer1) == false){
     if (true){
@@ -244,7 +233,7 @@ void MainWindow::addLayer1(QString myLayerPath, QString myLayerBaseName)
         //QString myLayerPath  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
         //myLayerPath  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/geb01_f.shp";
         //myLayerBaseName = "geb01_f";
-        QString myProviderName = "ogr";
+        //QString myProviderName = "ogr";
 
         QgsVectorLayer * mypLayer = new QgsVectorLayer(myLayerPath, myLayerBaseName, myProviderName);
 
