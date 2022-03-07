@@ -29,6 +29,16 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
+    <widget class="QGraphicsView" name="graphicsView">
+     <property name="geometry">
+      <rect>
+       <x>-5</x>
+       <y>1</y>
+       <width>471</width>
+       <height>481</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
    <widget class="QCheckBox" name="checkBox">
     <property name="geometry">

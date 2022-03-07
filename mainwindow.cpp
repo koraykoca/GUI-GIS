@@ -15,7 +15,6 @@
 #include "qgsmaptoolpan.h"
 #include "qgsmaptoolzoom.h"
 
-#include <qtoolbutton.h>
 #include <qlist.h>
 #include <qpoint.h>
 #include <QGraphicsItem>
@@ -32,7 +31,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     //QString myPluginsDir = "/home/koray/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
     QString myPluginsDir = "/home/unibw/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
 
-
     crsSrc = QgsCoordinateReferenceSystem("EPSG:25832");  // UTM Zone 32
     crsDest = QgsCoordinateReferenceSystem("EPSG:4326");  // WGS 84
 
@@ -43,27 +41,19 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
 
     mpMapCanvas = new QgsMapCanvas();  // QgsMapCanvas to visualize QgsMapLayers like QgsVectorLayer or QgsRasterLayer
 
-    marker = new QLabel(mpMapCanvas);
+    scene = mpMapCanvas->scene();
+
     QPixmap pixmap = QPixmap(":/mapMarker.png");
-    marker->move(50,50);
-
+    icon = new QGraphicsPixmapItem(pixmap);
+    scene->addItem(icon);
+    qDebug() << "icon x:" << icon->x() << "icon y:" << icon->y() << icon->boundingRect();
     QSize size = pixmap.size();
-    QPixmap pixmapc = pixmap;
-    //QPixmap pixmapc = pixmap.scaled(size.width()*2, size.width()*2);  // to prevent the cutting effect
-
-    pixmapc.fill(QColor::fromRgb(0, 0, 0, 0));
-    //pixmapc = pixmap.transformed(QTransform().rotate(12), Qt::SmoothTransformation);
-    painter = new QPainter(&pixmapc);
     QTransform transform;
-    transform.translate(-size.width()/2, 0);
-    painter->setTransform(transform);
-    painter->drawPixmap(0,0, pixmap);
-    marker->setPixmap(pixmapc);
-    marker->hide();
+    transform.translate(-size.width()/2, -size.height());
+    icon->setTransform(transform);
+    icon->hide();
 
-//    painter->setRenderHint(QPainter::Antialiasing);
-//    painter->setRenderHint(QPainter::SmoothPixmapTransform);
-//    painter->setRenderHint(QPainter::HighQualityAntialiasing);
+    //pixmapc = pixmap.transformed(QTransform().rotate(12), Qt::SmoothTransformation);
 
     mpMapCanvas->enableAntiAliasing(true);
     mpMapCanvas->setCanvasColor(QColor(255, 255, 255));
@@ -95,7 +85,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(selectCoord(QgsPointXY)));
     connect(mpMapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCoord(QgsPointXY)));
 
-    QToolButton* toolButton = new QToolButton();  // local variable
+    toolButton = new QToolButton();  // local variable
     toolButton->setMenu(menuAdd_Layer);
     toolButton->setIcon(QIcon(":/mActionAddLayer.png"));
     toolButton->setPopupMode(QToolButton::InstantPopup);
@@ -137,8 +127,9 @@ MainWindow::~MainWindow()
   delete checkBox;
   delete checkBox_2;
   delete checkBox_3;
-  delete marker;
-  delete painter;
+  delete mpClickPoint;
+  delete toolButton;
+  delete icon;
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event){
@@ -189,16 +180,10 @@ void MainWindow::selectCoord(QgsPointXY point)
     qreal x = point.x();
     qreal y = point.y();
     mpMapCanvas->getCoordinateTransform()->transformInPlace(x, y);
-    QPointF pointf = QPointF(x , y);
+    pointf = QPointF(x , y);
 
-    marker->move(pointf.x(), pointf.y());
-    marker->show();
-}
-
-void MainWindow::putMarker()
-{
-    QMainWindow::statusBar()->showMessage(tr("Clicked"));
-
+    icon->setPos(pointf.x(), pointf.y());
+    icon->show();
 }
 
 void MainWindow::panMode()
@@ -221,7 +206,6 @@ void MainWindow::zoomInMode()
         mpMapCanvas->unsetMapTool(mpZoomInTool);
         mpMapCanvas->setMapTool(mpClickPoint);
     }
-
 }
 
 void MainWindow::zoomOutMode()

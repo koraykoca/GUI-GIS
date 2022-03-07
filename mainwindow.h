@@ -6,11 +6,6 @@
 #include <qgsmaptool.h>
 #include <qgsmaptoolemitpoint.h>
 #include "qgscoordinatereferencesystem.h"
-#include <qgsvertexmarker.h>
-
-#include <qgslabeling.h>
-#include <qgslabelfeature.h>
-#include <qgsfield.h>
 
 //QT Includes
 #include <QtGui>
@@ -18,7 +13,8 @@
 #include <qtoolbar.h>
 #include <QVBoxLayout>
 #include <QObject>
-#include <QLabel>
+#include <QtCore>
+#include <qtoolbutton.h>
 
 //Local Includes
 #include <ui_mainwindowbase.h>
@@ -44,7 +40,6 @@ public slots:
     void addLayer4();
     void showCoord(QgsPointXY);
     void selectCoord(QgsPointXY);
-    void putMarker();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *) override;
@@ -64,13 +59,14 @@ private:
     QgsCoordinateReferenceSystem crsSrc;
     QgsCoordinateReferenceSystem crsDest;
     QgsCoordinateTransform mTransform;
-    QLabel *marker;
     QgsVectorLayer * ptrLayer1 = nullptr;
     QgsVectorLayer * ptrLayer2 = nullptr;
     QgsVectorLayer * ptrLayer3 = nullptr;
     QgsVectorLayer * ptrLayer4 = nullptr;
-
-    QPainter * painter;
+    QToolButton* toolButton;
+    QGraphicsScene * scene;
+    QGraphicsPixmapItem * icon;
+    QPointF pointf;
 
 signals:
     void changed(const QMimeData *mimeData = nullptr);
