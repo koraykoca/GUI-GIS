@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+ #include "mainwindow.h"
 
 // QGIS Includes
 
@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
 
     mpMapCanvas = new QgsMapCanvas();  // QgsMapCanvas to visualize QgsMapLayers like QgsVectorLayer or QgsRasterLayer
 
+    mpMapCanvas->setContextMenuPolicy(Qt::CustomContextMenu);
+
     scene = mpMapCanvas->scene();
 
     QPixmap pixmap = QPixmap(":/mapMarker.png");
@@ -51,6 +53,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     QTransform transform;
     transform.translate(-size.width()/2, -size.height());
     icon->setTransform(transform);
+    icon->setFlag(QGraphicsPixmapItem::ItemIgnoresTransformations,true);
     icon->hide();
 
     //pixmapc = pixmap.transformed(QTransform().rotate(12), Qt::SmoothTransformation);
@@ -84,6 +87,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(checkBox_4, SIGNAL(stateChanged(int)), this, SLOT(addLayer4()));
     connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(selectCoord(QgsPointXY)));
     connect(mpMapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCoord(QgsPointXY)));
+    connect(mpMapCanvas, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 
     toolButton = new QToolButton();  // local variable
     toolButton->setMenu(menuAdd_Layer);
@@ -132,6 +136,22 @@ MainWindow::~MainWindow()
   delete icon;
 }
 
+//QMenu* MainWindow::createPopupMenu(){
+//    QMenu* menu= QMainWindow::createPopupMenu();
+//    menu->addSeparator();
+//    menu->addAction(tr("Custom Action"), this, SLOT(panMode()));
+//    menu->exec(QCursor::pos());
+//    return menu;
+//}
+
+void MainWindow::showContextMenu(const QPoint &pos){
+    QPoint globalPos = mpMapCanvas->mapToGlobal(pos);
+    QMenu menu;
+    menu.addAction("Pan", this, SLOT(panMode()));
+    menu.exec(globalPos);  // menu.exec(QCursor::pos());
+    qDebug() << "Clicked" << '\n';
+}
+
 void MainWindow::dragEnterEvent(QDragEnterEvent *event){
     setBackgroundRole(QPalette::Highlight);
 //    if (event->mimeData()->hasFormat("x-special/gnome-icon-list"))
@@ -168,6 +188,8 @@ void MainWindow::showCoord(QgsPointXY point)
 
 void MainWindow::selectCoord(QgsPointXY point)
 {
+    qDebug() << "point x:" << point.x() << " point y:" << point.y();
+
     if (layers.contains(ptrLayer4) == false){
         QgsPointXY point_trans = point;
         point_trans = mTransform.transform(point_trans);
@@ -177,11 +199,13 @@ void MainWindow::selectCoord(QgsPointXY point)
         textBrowser->setText(QString::number(point.y(), 'f', 4) + " " + QString::number(point.x(), 'f', 4));
     }
 
-    qreal x = point.x();
-    qreal y = point.y();
-    mpMapCanvas->getCoordinateTransform()->transformInPlace(x, y);
-    pointf = QPointF(x , y);
 
+    x = point.x();
+    y = point.y();
+    mpMapCanvas->getCoordinateTransform()->transformInPlace(x, y);
+    // qDebug() << "point x:" << point.x() << " point y:" << point.y();
+
+    pointf = QPointF(x , y);
     icon->setPos(pointf.x(), pointf.y());
     icon->show();
 }
@@ -291,6 +315,11 @@ void MainWindow::addLayer2()
         QgsSingleSymbolRenderer *mypRenderer2 = new QgsSingleSymbolRenderer(symbol);
 
         mypLayer2->setRenderer(mypRenderer2);
+
+        //add features
+
+        mypLayer2->startEditing();
+        QgsFeature * ft = new QgsFeature();
 
         // Add the Vector Layer to the Project Registry
         QgsProject::instance()->addMapLayer(mypLayer2, true);

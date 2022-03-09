@@ -9,7 +9,7 @@
 
 //QT Includes
 #include <QtGui>
-#include <QWidget>
+//#include <QWidget>
 #include <qtoolbar.h>
 #include <QVBoxLayout>
 #include <QObject>
@@ -40,12 +40,14 @@ public slots:
     void addLayer4();
     void showCoord(QgsPointXY);
     void selectCoord(QgsPointXY);
+    void showContextMenu(const QPoint&);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *) override;
     void dropEvent(QDropEvent *) override;
     void dragMoveEvent(QDragMoveEvent *) override;
     void dragLeaveEvent(QDragLeaveEvent *) override;
+    // QMenu* createPopupMenu() override;
 
 private:
     QgsMapCanvas * mpMapCanvas;
@@ -67,6 +69,8 @@ private:
     QGraphicsScene * scene;
     QGraphicsPixmapItem * icon;
     QPointF pointf;
+    qreal x;
+    qreal y;
 
 signals:
     void changed(const QMimeData *mimeData = nullptr);
