@@ -40,9 +40,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     QgsProviderRegistry::instance(myPluginsDir);
 
     mpMapCanvas = new QgsMapCanvas();  // QgsMapCanvas to visualize QgsMapLayers like QgsVectorLayer or QgsRasterLayer
-
     mpMapCanvas->setContextMenuPolicy(Qt::CustomContextMenu);
-
     scene = mpMapCanvas->scene();
 
     QPixmap pixmap = QPixmap(":/mapMarker.png");
@@ -199,7 +197,6 @@ void MainWindow::selectCoord(QgsPointXY point)
         textBrowser->setText(QString::number(point.y(), 'f', 4) + " " + QString::number(point.x(), 'f', 4));
     }
 
-
     x = point.x();
     y = point.y();
     mpMapCanvas->getCoordinateTransform()->transformInPlace(x, y);
@@ -225,10 +222,12 @@ void MainWindow::zoomInMode()
 {
     if (mpActionZoomIn->isChecked()){
         mpMapCanvas->setMapTool(mpZoomInTool);
+        icon->setPos(pointf.x(), pointf.y());
     }
     else{
         mpMapCanvas->unsetMapTool(mpZoomInTool);
         mpMapCanvas->setMapTool(mpClickPoint);
+         qDebug() << "icon pos:" << icon->pos();
     }
 }
 
