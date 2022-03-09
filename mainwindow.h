@@ -21,6 +21,7 @@
 
 extern QString ProviderName;
 
+// MainWindow class definition
 class MainWindow : public QMainWindow, private Ui::MainWindowBase
 {
     Q_OBJECT
@@ -40,15 +41,17 @@ public slots:
     void addLayer4();
     void showCoord(QgsPointXY);
     void selectCoord(QgsPointXY);
-    void showContextMenu(const QPoint&);
+    void showContextMenu(const QPoint&); // create slot for opening context menu
     void set_checks(QAction*);
+    void dropMark(QPointF);
+    void mouseEvent(QgsPointXY, Qt::MouseButton);
 
 protected:
+    // reimplement some functions
     void dragEnterEvent(QDragEnterEvent *) override;
     void dropEvent(QDropEvent *) override;
     void dragMoveEvent(QDragMoveEvent *) override;
     void dragLeaveEvent(QDragLeaveEvent *) override;
-    // QMenu* createPopupMenu() override;
 
 private:
     QgsMapCanvas * mpMapCanvas;
@@ -72,6 +75,7 @@ private:
     QPointF pointf;
     qreal x;
     qreal y;
+    QPoint lastPoint;
 
 signals:
     void changed(const QMimeData *mimeData = nullptr);

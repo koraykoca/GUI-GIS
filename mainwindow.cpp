@@ -21,6 +21,7 @@
 
 QString ProviderName = "ogr";
 
+//MainWindow class Implementation
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     : QMainWindow(parent,fl)
 {
@@ -40,13 +41,15 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     QgsProviderRegistry::instance(myPluginsDir);
 
     mpMapCanvas = new QgsMapCanvas();  // QgsMapCanvas to visualize QgsMapLayers like QgsVectorLayer or QgsRasterLayer
-    mpMapCanvas->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    mpMapCanvas->setContextMenuPolicy(Qt::CustomContextMenu);  // set context menu policy to custom
+
     scene = mpMapCanvas->scene();
 
     QPixmap pixmap = QPixmap(":/mapMarker.png");
     icon = new QGraphicsPixmapItem(pixmap);
     scene->addItem(icon);
-    qDebug() << "icon x:" << icon->x() << "icon y:" << icon->y() << icon->boundingRect();
+    //qDebug() << "icon x:" << icon->x() << "icon y:" << icon->y() << icon->boundingRect();
     QSize size = pixmap.size();
     QTransform transform;
     transform.translate(-size.width()/2, -size.height());
@@ -84,8 +87,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(checkBox_3, SIGNAL(stateChanged(int)), this, SLOT(addLayer3()));
     connect(checkBox_4, SIGNAL(stateChanged(int)), this, SLOT(addLayer4()));
     connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(selectCoord(QgsPointXY)));
+    connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(mouseEvent(QgsPointXY, Qt::MouseButton)));
     connect(mpMapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCoord(QgsPointXY)));
     connect(mpMapCanvas, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+    connect(mpMapCanvas, SIGNAL(), this, SLOT(showContextMenu(QPoint)));
 
     toolButton = new QToolButton();  // local variable
     toolButton->setMenu(menuAdd_Layer);
@@ -134,25 +139,28 @@ MainWindow::~MainWindow()
   delete icon;
 }
 
-//QMenu* MainWindow::createPopupMenu(){
-//    QMenu* menu= QMainWindow::createPopupMenu();
-//    menu->addSeparator();
-//    menu->addAction(tr("Custom Action"), this, SLOT(panMode()));
-//    menu->exec(QCursor::pos());
-//    return menu;
+//void MainWindow::mousePressEvent(QMouseEvent *event){
+//    if(event->buttons() == Qt::LeftButton){
+
+//    }
 //}
 
 void MainWindow::showContextMenu(const QPoint &pos){
-    QPoint globalPos = mpMapCanvas->mapToGlobal(pos);
-    QMenu menu;
+    QPoint globalPos = mpMapCanvas->mapToGlobal(pos); // handle global position
+    auto posf = QgsPointXY(pos.x(), pos.y());
+    qDebug() << "POS:" << posf << '\n';
+    QMenu menu;  // create menu and insert actions
+    menu.addAction("Mark Drop", this, SLOT(dropMark(posf)));
     menu.addAction("Zoom In", this, SLOT(zoomInMode()));
     menu.addAction("Zoom Out", this, SLOT(zoomOutMode()));
     menu.addAction("Pan", this, SLOT(panMode()));
-    connect(&menu, SIGNAL(triggered(QAction *)), this, SLOT(set_checks(QAction*)));
-    menu.exec(globalPos);  // menu.exec(QCursor::pos());
+    connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(set_checks(QAction*)));
+    menu.exec(globalPos);  // menu.exec(QCursor::pos());  // show context menu at handling position
 }
 
 void MainWindow::set_checks(QAction* action){
+    // to get which QActions triggered
+
     if (action->text() == "Zoom In"){
         mpActionZoomIn->setChecked(true);
         mpMapCanvas->setMapTool(mpZoomInTool);
@@ -203,7 +211,7 @@ void MainWindow::showCoord(QgsPointXY point)
 
 void MainWindow::selectCoord(QgsPointXY point)
 {
-    qDebug() << "point x:" << point.x() << " point y:" << point.y();
+    //qDebug() << "point x:" << point.x() << " point y:" << point.y();
 
     if (layers.contains(ptrLayer4) == false){
         QgsPointXY point_trans = point;
@@ -220,7 +228,17 @@ void MainWindow::selectCoord(QgsPointXY point)
     // qDebug() << "point x:" << point.x() << " point y:" << point.y();
 
     pointf = QPointF(x , y);
-    icon->setPos(pointf.x(), pointf.y());
+    qDebug() << "POINTF:" << pointf << '\n';
+}
+
+void MainWindow::mouseEvent(QgsPointXY point, Qt::MouseButton button){
+    if (button == Qt::LeftButton){
+        dropMark(pointf);
+    }
+}
+
+void MainWindow::dropMark(QPointF pf){
+    icon->setPos(pf.x(), pf.y());
     icon->show();
 }
 
@@ -239,12 +257,10 @@ void MainWindow::zoomInMode()
 {
     if (mpActionZoomIn->isChecked()){
         mpMapCanvas->setMapTool(mpZoomInTool);
-        icon->setPos(pointf.x(), pointf.y());
     }
     else{
         mpMapCanvas->unsetMapTool(mpZoomInTool);
         mpMapCanvas->setMapTool(mpClickPoint);
-         qDebug() << "icon pos:" << icon->pos();
     }
 }
 
