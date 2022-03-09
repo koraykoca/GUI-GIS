@@ -40,20 +40,15 @@ public slots:
     void addLayer4();
     void showCoord(QgsPointXY);
     void selectCoord(QgsPointXY);
-<<<<<<< HEAD
     void showContextMenu(const QPoint&);
-=======
->>>>>>> 08d088796c5ffe43492f4760d74a2c1f3b101ecb
+    void set_checks(QAction*);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *) override;
     void dropEvent(QDropEvent *) override;
     void dragMoveEvent(QDragMoveEvent *) override;
     void dragLeaveEvent(QDragLeaveEvent *) override;
-<<<<<<< HEAD
     // QMenu* createPopupMenu() override;
-=======
->>>>>>> 08d088796c5ffe43492f4760d74a2c1f3b101ecb
 
 private:
     QgsMapCanvas * mpMapCanvas;
@@ -75,11 +70,8 @@ private:
     QGraphicsScene * scene;
     QGraphicsPixmapItem * icon;
     QPointF pointf;
-<<<<<<< HEAD
     qreal x;
     qreal y;
-=======
->>>>>>> 08d088796c5ffe43492f4760d74a2c1f3b101ecb
 
 signals:
     void changed(const QMimeData *mimeData = nullptr);

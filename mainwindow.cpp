@@ -145,9 +145,26 @@ MainWindow::~MainWindow()
 void MainWindow::showContextMenu(const QPoint &pos){
     QPoint globalPos = mpMapCanvas->mapToGlobal(pos);
     QMenu menu;
+    menu.addAction("Zoom In", this, SLOT(zoomInMode()));
+    menu.addAction("Zoom Out", this, SLOT(zoomOutMode()));
     menu.addAction("Pan", this, SLOT(panMode()));
+    connect(&menu, SIGNAL(triggered(QAction *)), this, SLOT(set_checks(QAction*)));
     menu.exec(globalPos);  // menu.exec(QCursor::pos());
-    qDebug() << "Clicked" << '\n';
+}
+
+void MainWindow::set_checks(QAction* action){
+    if (action->text() == "Zoom In"){
+        mpActionZoomIn->setChecked(true);
+        mpMapCanvas->setMapTool(mpZoomInTool);
+    }
+    if (action->text() == "Zoom Out"){
+        mpActionZoomOut->setChecked(true);
+        mpMapCanvas->setMapTool(mpZoomOutTool);
+    }
+    if (action->text() == "Pan"){
+        mpActionPan->setChecked(true);
+        mpMapCanvas->setMapTool(mpPanTool);
+    }
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event){
