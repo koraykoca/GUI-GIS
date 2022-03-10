@@ -43,7 +43,7 @@ public slots:
     void selectCoord(QgsPointXY);
     void showContextMenu(const QPoint&); // create slot for opening context menu
     void set_checks(QAction*);
-    void dropMark(QPointF);
+    void dropMark();
     void mouseEvent(QgsPointXY, Qt::MouseButton);
 
 protected:
@@ -76,6 +76,7 @@ private:
     qreal x;
     qreal y;
     QPoint lastPoint;
+    bool flag;
 
 signals:
     void changed(const QMimeData *mimeData = nullptr);

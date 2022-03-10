@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     QTransform transform;
     transform.translate(-size.width()/2, -size.height());
     icon->setTransform(transform);
-    icon->setFlag(QGraphicsPixmapItem::ItemIgnoresTransformations,true);
+    //icon->setFlag(QGraphicsPixmapItem::ItemIgnoresTransformations,true);
     icon->hide();
 
     //pixmapc = pixmap.transformed(QTransform().rotate(12), Qt::SmoothTransformation);
@@ -86,8 +86,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     connect(checkBox_2, SIGNAL(stateChanged(int)), this, SLOT(addLayer2()));
     connect(checkBox_3, SIGNAL(stateChanged(int)), this, SLOT(addLayer3()));
     connect(checkBox_4, SIGNAL(stateChanged(int)), this, SLOT(addLayer4()));
-    connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(selectCoord(QgsPointXY)));
-    connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(mouseEvent(QgsPointXY, Qt::MouseButton)));
+    //connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(selectCoord(QgsPointXY)));
+    connect(mpClickPoint, SIGNAL(canvasClicked(QgsPointXY,Qt::MouseButton)), this, SLOT(mouseEvent(QgsPointXY,Qt::MouseButton)));
     connect(mpMapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCoord(QgsPointXY)));
     connect(mpMapCanvas, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
     connect(mpMapCanvas, SIGNAL(), this, SLOT(showContextMenu(QPoint)));
@@ -139,22 +139,17 @@ MainWindow::~MainWindow()
   delete icon;
 }
 
-//void MainWindow::mousePressEvent(QMouseEvent *event){
-//    if(event->buttons() == Qt::LeftButton){
-
-//    }
-//}
-
 void MainWindow::showContextMenu(const QPoint &pos){
-    QPoint globalPos = mpMapCanvas->mapToGlobal(pos); // handle global position
-    auto posf = QgsPointXY(pos.x(), pos.y());
-    qDebug() << "POS:" << posf << '\n';
+    pointf = QPointF(pos.x() , pos.y());
+
     QMenu menu;  // create menu and insert actions
-    menu.addAction("Mark Drop", this, SLOT(dropMark(posf)));
+    menu.addAction("Mark Drop", this, SLOT(dropMark()));
     menu.addAction("Zoom In", this, SLOT(zoomInMode()));
     menu.addAction("Zoom Out", this, SLOT(zoomOutMode()));
     menu.addAction("Pan", this, SLOT(panMode()));
     connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(set_checks(QAction*)));
+
+    QPoint globalPos = mpMapCanvas->mapToGlobal(pos); // handle global position
     menu.exec(globalPos);  // menu.exec(QCursor::pos());  // show context menu at handling position
 }
 
@@ -193,7 +188,6 @@ void MainWindow::dropEvent(QDropEvent *event){
     int idx_s = dataPath.lastIndexOf('/');  // get index of last / in the path
     int idx_e = dataPath.lastIndexOf('.');  // get index of last . in the path
     QString name = dataPath.mid(idx_s + 1, idx_e - idx_s - 1);  // get the name of the file
-    // qDebug() << "data name:" << name;
     MainWindow::addLayer1(dataUrl.path(), name, ProviderName);
 }
 
@@ -210,12 +204,11 @@ void MainWindow::showCoord(QgsPointXY point)
 }
 
 void MainWindow::selectCoord(QgsPointXY point)
-{
-    //qDebug() << "point x:" << point.x() << " point y:" << point.y();
-
+{ 
     if (layers.contains(ptrLayer4) == false){
         QgsPointXY point_trans = point;
         point_trans = mTransform.transform(point_trans);
+        //qDebug() << "SelCoo Trans" << "x: " << point_trans.x() << "y:" << point_trans.y() << '\n';
         textBrowser->setText(QString::number(point_trans.y(), 'f', 4) + " " + QString::number(point_trans.x(), 'f', 4));
     }
     else{
@@ -225,21 +218,25 @@ void MainWindow::selectCoord(QgsPointXY point)
     x = point.x();
     y = point.y();
     mpMapCanvas->getCoordinateTransform()->transformInPlace(x, y);
-    // qDebug() << "point x:" << point.x() << " point y:" << point.y();
 
     pointf = QPointF(x , y);
-    qDebug() << "POINTF:" << pointf << '\n';
+    //qDebug() << "SelCoo" << "x: " << pointf.x() << "y:" << pointf.y() << '\n';
 }
 
 void MainWindow::mouseEvent(QgsPointXY point, Qt::MouseButton button){
     if (button == Qt::LeftButton){
-        dropMark(pointf);
+        if (layers.isEmpty() == false){
+            selectCoord(point);
+            dropMark();
+        }
     }
 }
 
-void MainWindow::dropMark(QPointF pf){
-    icon->setPos(pf.x(), pf.y());
-    icon->show();
+void MainWindow::dropMark(){
+    if (layers.isEmpty() == false){
+        icon->setPos(pointf.x(), pointf.y());
+        icon->show();
+    }
 }
 
 void MainWindow::panMode()
@@ -317,6 +314,7 @@ void MainWindow::addLayer1(QString myLayerPath, QString myLayerBaseName, QString
         layers.removeOne(ptrLayer1);
         if (layers.isEmpty() == true){
              mpMapCanvas->unsetMapTool(mpClickPoint);
+             icon->hide();
         }
     }
     // Set the Map Canvas Layers
@@ -350,8 +348,8 @@ void MainWindow::addLayer2()
 
         //add features
 
-        mypLayer2->startEditing();
-        QgsFeature * ft = new QgsFeature();
+//        mypLayer2->startEditing();
+//        QgsFeature * ft = new QgsFeature();
 
         // Add the Vector Layer to the Project Registry
         QgsProject::instance()->addMapLayer(mypLayer2, true);
@@ -368,6 +366,7 @@ void MainWindow::addLayer2()
         layers.removeOne(ptrLayer2);
          if (layers.isEmpty() == true){
             mpMapCanvas->unsetMapTool(mpClickPoint);
+            icon->hide();
          }
     }
     // Set the Map Canvas Layers
@@ -414,6 +413,7 @@ void MainWindow::addLayer3()
         layers.removeOne(ptrLayer3);
         if (layers.isEmpty() == true){
             mpMapCanvas->unsetMapTool(mpClickPoint);
+            icon->hide();
         }
     }
     // Set the Map Canvas Layers
@@ -453,6 +453,7 @@ void MainWindow::addLayer4()
         layers.removeOne(ptrLayer4);
         if (layers.isEmpty() == true){
             mpMapCanvas->unsetMapTool(mpClickPoint);
+            icon->hide();
         }
     }
     // Set the Map Canvas Layers
