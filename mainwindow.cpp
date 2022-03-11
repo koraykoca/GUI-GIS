@@ -137,6 +137,7 @@ MainWindow::~MainWindow()
   delete mpClickPoint;
   delete toolButton;
   delete icon;
+  delete mypLayer2;
 }
 
 void MainWindow::showContextMenu(const QPoint &pos){
@@ -195,6 +196,27 @@ void MainWindow::dragLeaveEvent(QDragLeaveEvent *event){
     event->accept();
 }
 
+void MainWindow::createLayer(QString type, QPointF point){
+    auto vecLayer = new QgsVectorLayer(type, "temporary_points", "memory");  // create Layer
+    auto layerData = vecLayer->dataProvider();
+    vecLayer->startEditing();
+    auto layerFtr = QgsFeature();
+    layerFtr.setGeometry(QgsGeometry::fromPointXY(point + QPointF(5,5)));
+    features.push_back(layerFtr);
+    layerData->addFeatures(features);
+    vecLayer->commitChanges();
+    QgsSymbol *symbol = QgsSymbol::defaultSymbol(vecLayer->geometryType());
+    symbol->setColor(QColor("#CD736C"));
+    QgsSingleSymbolRenderer *vecRenderer = new QgsSingleSymbolRenderer(symbol);
+
+    QgsProject::instance()->addMapLayer(vecLayer, true);
+    vecLayer->setRenderer(vecRenderer);
+
+    qDebug() << "new layer added" << vecLayer->geometryType();
+    layers.push_front(vecLayer);
+    mpMapCanvas->setLayers(layers);
+}
+
 void MainWindow::showCoord(QgsPointXY point)
 {
     if (layers.contains(ptrLayer4) == false){
@@ -228,6 +250,7 @@ void MainWindow::mouseEvent(QgsPointXY point, Qt::MouseButton button){
         if (layers.isEmpty() == false){
             selectCoord(point);
             dropMark();
+            createLayer("Point", pointf);
         }
     }
 }
@@ -334,7 +357,7 @@ void MainWindow::addLayer2()
         QString myLayerBaseName2 = "ver01_l";
         QString myProviderName = "ogr";
 
-        QgsVectorLayer * mypLayer2 = new QgsVectorLayer(myLayerPath2, myLayerBaseName2, myProviderName);
+        mypLayer2 = new QgsVectorLayer(myLayerPath2, myLayerBaseName2, myProviderName);
 
         ptrLayer2 = mypLayer2;
 
@@ -345,11 +368,6 @@ void MainWindow::addLayer2()
         QgsSingleSymbolRenderer *mypRenderer2 = new QgsSingleSymbolRenderer(symbol);
 
         mypLayer2->setRenderer(mypRenderer2);
-
-        //add features
-
-//        mypLayer2->startEditing();
-//        QgsFeature * ft = new QgsFeature();
 
         // Add the Vector Layer to the Project Registry
         QgsProject::instance()->addMapLayer(mypLayer2, true);

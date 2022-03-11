@@ -30,6 +30,7 @@ public:
     MainWindow(QWidget* parent = nullptr, Qt::WindowFlags fl = Qt::WindowFlags());
     ~MainWindow();
     QList <QgsMapLayer *> layers;
+    QList <QgsFeature> features;
 
 public slots:
     void zoomInMode();
@@ -45,6 +46,7 @@ public slots:
     void set_checks(QAction*);
     void dropMark();
     void mouseEvent(QgsPointXY, Qt::MouseButton);
+    void createLayer(QString, QPointF);
 
 protected:
     // reimplement some functions
@@ -69,14 +71,13 @@ private:
     QgsVectorLayer * ptrLayer2 = nullptr;
     QgsVectorLayer * ptrLayer3 = nullptr;
     QgsVectorLayer * ptrLayer4 = nullptr;
+    QgsVectorLayer * mypLayer2;
     QToolButton* toolButton;
     QGraphicsScene * scene;
     QGraphicsPixmapItem * icon;
     QPointF pointf;
     qreal x;
     qreal y;
-    QPoint lastPoint;
-    bool flag;
 
 signals:
     void changed(const QMimeData *mimeData = nullptr);
