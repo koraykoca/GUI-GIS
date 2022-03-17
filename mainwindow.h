@@ -46,7 +46,7 @@ public slots:
     void set_checks(QAction*);
     void dropMark();
     void mouseEvent(QgsPointXY, Qt::MouseButton);
-    void createLayer(QString, QPointF);
+    void createLayer(QString, QgsPointXY);
 
 protected:
     // reimplement some functions

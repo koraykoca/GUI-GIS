@@ -196,23 +196,29 @@ void MainWindow::dragLeaveEvent(QDragLeaveEvent *event){
     event->accept();
 }
 
-void MainWindow::createLayer(QString type, QPointF point){
+void MainWindow::createLayer(QString type, QgsPointXY point){
     auto vecLayer = new QgsVectorLayer(type, "temporary_points", "memory");  // create Layer
     auto layerData = vecLayer->dataProvider();
     vecLayer->startEditing();
     auto layerFtr = QgsFeature();
-    layerFtr.setGeometry(QgsGeometry::fromPointXY(point + QPointF(5,5)));
+    layerFtr.setGeometry(QgsGeometry::fromPointXY(point));
     features.push_back(layerFtr);
     layerData->addFeatures(features);
-    vecLayer->commitChanges();
-    QgsSymbol *symbol = QgsSymbol::defaultSymbol(vecLayer->geometryType());
-    symbol->setColor(QColor("#CD736C"));
-    QgsSingleSymbolRenderer *vecRenderer = new QgsSingleSymbolRenderer(symbol);
-
-    QgsProject::instance()->addMapLayer(vecLayer, true);
-    vecLayer->setRenderer(vecRenderer);
+    vecLayer->updateExtents();
+    //vecLayer->commitChanges();
 
     qDebug() << "new layer added" << vecLayer->geometryType();
+
+    QgsSymbol *symbol = QgsSymbol::defaultSymbol(vecLayer->geometryType());
+    symbol->setColor(QColor("#FF2D00"));
+    //symbol->drawPreviewIcon();
+
+    auto *vecRenderer = new QgsSingleSymbolRenderer(symbol);
+    vecLayer->setRenderer(vecRenderer);
+
+    // QgsSingleSymbolRenderer *vecRenderer = new QgsSingleSymbolRenderer(symbol);
+    QgsProject::instance()->addMapLayer(vecLayer, true);
+
     layers.push_front(vecLayer);
     mpMapCanvas->setLayers(layers);
 }
@@ -250,7 +256,7 @@ void MainWindow::mouseEvent(QgsPointXY point, Qt::MouseButton button){
         if (layers.isEmpty() == false){
             selectCoord(point);
             dropMark();
-            createLayer("Point", pointf);
+            createLayer("Point", point);
         }
     }
 }
