@@ -6,6 +6,8 @@
 #include <qgsmaptool.h>
 #include <qgsmaptoolemitpoint.h>
 #include "qgscoordinatereferencesystem.h"
+#include <qgsmarkersymbol.h>
+#include <qgsmarkersymbollayer.h>
 
 //QT Includes
 #include <QtGui>
@@ -78,6 +80,10 @@ private:
     QPointF pointf;
     qreal x;
     qreal y;
+    QPainter* painter;
+    QSize size;
+    QgsSymbol *symbol;
+    QgsMarkerSymbol* symbol2;
 
 signals:
     void changed(const QMimeData *mimeData = nullptr);

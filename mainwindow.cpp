@@ -47,10 +47,13 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     scene = mpMapCanvas->scene();
 
     QPixmap pixmap = QPixmap(":/mapMarker.png");
+    size = pixmap.size();
+    painter = new QPainter(&pixmap);
+
     icon = new QGraphicsPixmapItem(pixmap);
     scene->addItem(icon);
     //qDebug() << "icon x:" << icon->x() << "icon y:" << icon->y() << icon->boundingRect();
-    QSize size = pixmap.size();
+
     QTransform transform;
     transform.translate(-size.width()/2, -size.height());
     icon->setTransform(transform);
@@ -198,23 +201,49 @@ void MainWindow::dragLeaveEvent(QDragLeaveEvent *event){
 
 void MainWindow::createLayer(QString type, QgsPointXY point){
     auto vecLayer = new QgsVectorLayer(type, "temporary_points", "memory");  // create Layer
-    auto layerData = vecLayer->dataProvider();
+    auto dataProv = vecLayer->dataProvider();
     vecLayer->startEditing();
+    qDebug()<< "Layer is editable? " << vecLayer->isEditable();
+
+//    QgsFeatureRenderer* layerRenderer = vecLayer->renderer();
+//    QgsSingleSymbolRenderer* singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+//    QgsMarkerSymbol* symbol2 = new QgsMarkerSymbol();
+//    QgsStringMap map;
+//    map["name"] = "mapMarker.png";
+//    map["size"]= "6";
+
+    QString path = "/home/unibw/dev/cpp/qgis_template/mapMarker.png";
+    auto symbol2 = QgsSymbol::defaultSymbol(QgsWkbTypes::PointGeometry);
+    symbol2->deleteSymbolLayer(0);
+
+    auto symbolLayer = new QgsRasterMarkerSymbolLayer(path);
+    symbol2->appendSymbolLayer(symbolLayer);
+
+    auto renderer = new QgsSingleSymbolRenderer(symbol2);
+    vecLayer->setRenderer(renderer);
+    vecLayer->triggerRepaint();
+
     auto layerFtr = QgsFeature();
     layerFtr.setGeometry(QgsGeometry::fromPointXY(point));
     features.push_back(layerFtr);
-    layerData->addFeatures(features);
+    dataProv->addFeatures(features);
     vecLayer->updateExtents();
-    //vecLayer->commitChanges();
+    //vecLayer->commitChanges();  to write edits to the underlying QgsVectorDataProvider, otherwise any change is held in memory only
 
-    qDebug() << "new layer added" << vecLayer->geometryType();
+    //qDebug() << "new layer added" << vecLayer->geometryType();
 
-    QgsSymbol *symbol = QgsSymbol::defaultSymbol(vecLayer->geometryType());
-    symbol->setColor(QColor("#FF2D00"));
-    //symbol->drawPreviewIcon();
+    //QgsSymbol *symbol = QgsSymbol::defaultSymbol(vecLayer->geometryType());
+    //QgsMarkerSymbol* symbol2 = new  QgsMarkerSymbol();
+    //QgsStringMap mp;
+    //mp[QString("name")]= QString("food_pub.svg");
+    //symbol2->createSimple(mp);
 
-    auto *vecRenderer = new QgsSingleSymbolRenderer(symbol);
-    vecLayer->setRenderer(vecRenderer);
+    //symbol->setColor(QColor("#FF2D00"));
+    //symbol->drawPreviewIcon(painter, QSize(24,24));
+
+    //auto *vecRenderer = new QgsSingleSymbolRenderer(symbol);
+
+    //vecLayer->setRenderer(vecRenderer);
 
     // QgsSingleSymbolRenderer *vecRenderer = new QgsSingleSymbolRenderer(symbol);
     QgsProject::instance()->addMapLayer(vecLayer, true);
@@ -255,7 +284,7 @@ void MainWindow::mouseEvent(QgsPointXY point, Qt::MouseButton button){
     if (button == Qt::LeftButton){
         if (layers.isEmpty() == false){
             selectCoord(point);
-            dropMark();
+            //dropMark();
             createLayer("Point", point);
         }
     }
