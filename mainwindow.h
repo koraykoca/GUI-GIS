@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+<<<<<<< HEAD
 //QGIS Includes
 #include <qgsmapcanvas.h>
 #include <qgsmaptool.h>
@@ -25,10 +26,20 @@ extern QString ProviderName;
 
 // MainWindow class definition
 class MainWindow : public QMainWindow, private Ui::MainWindowBase
+=======
+#include <QMainWindow>
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
+
+class MainWindow : public QMainWindow
+>>>>>>> cockpit
 {
     Q_OBJECT
 
 public:
+<<<<<<< HEAD
     MainWindow(QWidget* parent = nullptr, Qt::WindowFlags fl = Qt::WindowFlags());
     ~MainWindow();
     QList <QgsMapLayer *> layers;
@@ -90,3 +101,28 @@ signals:
 };
 
 #endif // MAINWINDOW_H
+=======
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+private:
+    Ui::MainWindow *ui;
+};
+
+class AnalogClock : public QWidget
+{
+    Q_OBJECT
+
+public:
+    AnalogClock(QWidget* parent = nullptr);
+
+protected:
+    void paintEvent(QPaintEvent *event) override;
+};
+
+
+
+#endif // MAINWINDOW_H
+
+
+>>>>>>> cockpit
