@@ -125,30 +125,30 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags fl)
     setAcceptDrops(true);
 =======
 #include "mainwindow.h"
-#include "map.h"
 #include "ui_mainwindow.h"
-#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    auto layoutMap = new QVBoxLayout();
-    Map* map = new Map();
+
+    layoutMap = new QVBoxLayout();
+    map = new Map();
     layoutMap->addWidget(map);
     ui->Map->setLayout(layoutMap);
 
-    auto layoutGenInfo = new QVBoxLayout;
-    AnalogClock* clock = new AnalogClock();
-//    clock->setBaseSize(50,50);
-//    clock->setGeometry(50,50,50,50);
+    layoutGenInfo = new QVBoxLayout;
+    clock = new InfoGeneral();
     layoutGenInfo->addWidget(clock);
     ui->analogClock->setLayout(layoutGenInfo);
+<<<<<<< HEAD
 
 //    delete layoutMap;
 //    delete map;
 //    delete layoutGenInfo;
+>>>>>>> cockpit
+=======
 >>>>>>> cockpit
 }
 
@@ -542,6 +542,7 @@ void MainWindow::addLayer4()
     mpMapCanvas->setLayers(layers);
 =======
     delete ui;
+<<<<<<< HEAD
 }
 
 AnalogClock::AnalogClock(QWidget *parent)
@@ -608,5 +609,11 @@ void AnalogClock::paintEvent(QPaintEvent *)
             painter.drawLine(92, 0, 96, 0);
         painter.rotate(6.0);
     }
+>>>>>>> cockpit
+=======
+    delete layoutMap;
+    delete map;
+    delete clock;
+    delete layoutGenInfo;
 >>>>>>> cockpit
 }

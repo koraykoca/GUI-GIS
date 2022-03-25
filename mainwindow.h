@@ -28,6 +28,9 @@ extern QString ProviderName;
 class MainWindow : public QMainWindow, private Ui::MainWindowBase
 =======
 #include <QMainWindow>
+#include <QVBoxLayout>
+#include "map.h"
+#include "infogeneral.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -107,20 +110,11 @@ signals:
 
 private:
     Ui::MainWindow *ui;
+    QVBoxLayout* layoutMap;
+    Map* map;
+    InfoGeneral* clock;
+    QVBoxLayout* layoutGenInfo;
 };
-
-class AnalogClock : public QWidget
-{
-    Q_OBJECT
-
-public:
-    AnalogClock(QWidget* parent = nullptr);
-
-protected:
-    void paintEvent(QPaintEvent *event) override;
-};
-
-
 
 #endif // MAINWINDOW_H
 
