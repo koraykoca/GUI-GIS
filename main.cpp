@@ -1,22 +1,10 @@
-// Qt includes
-
+#include "mainwindow.h"
 #include <QApplication>
-#include <mainwindow.h>
-#include <QString>
 
-#include <QMessageBox>
-#include <QtDebug>
-
-// QGIS Includes
-#include <qgsapplication.h>
-
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-    // Start the Application
-    QgsApplication app(argc, argv, true);
-
-    MainWindow * mypMainWindow = new MainWindow();
-    mypMainWindow->show();
-    // Start the Application Event Loop
-    return app.exec();
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+    return a.exec();
 }
