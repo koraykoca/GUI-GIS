@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     clock = new InfoGeneral();
     layoutGenInfo->addWidget(clock);
     ui->analogClock->setLayout(layoutGenInfo);
+
+    connect(map, SIGNAL(coordChanged(QgsPointXY)), this, SLOT(printCoord(QgsPointXY)));
 }
 
 MainWindow::~MainWindow()
@@ -25,4 +27,8 @@ MainWindow::~MainWindow()
     delete map;
     delete clock;
     delete layoutGenInfo;
+}
+
+void MainWindow::printCoord(QgsPointXY point){
+    ui->textBrowser_4->setText(QString::number(point.y(), 'f', 4) + " " + QString::number(point.x(), 'f', 4));
 }

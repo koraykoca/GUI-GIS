@@ -1,4 +1,4 @@
-QT       += core gui
+QT += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,16 +10,49 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    map.cpp \
+    infogeneral.cpp \
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    map.h \
+    infogeneral.h \
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    mainwindowbase.ui
 
-include(/home/unibw/dev/cpp/qgis_template/Cpp_GUI.pro)
-include(/home/unibw/dev/cpp/InfoGeneral/InfoGeneral.pro)
+RESOURCES += \
+    resources.qrc
+
+#include(/home/unibw/dev/cpp/qgis_template/Cpp_GUI.pro)
+#include(/home/unibw/dev/cpp/InfoGeneral/InfoGeneral.pro)
+
+#include(/home/koray/dev/cpp/Map/Cpp_GUI.pro)
+#include(/home/koray/dev/cpp/infoGeneral/InfoGeneral.pro)
+
+QGIS_DIR = /home/koray/dev/cpp/QGIS
+LIBS += -L/$${QGIS_DIR}/build-master-qtcreator/output/lib -lqgis_core -lqgis_gui -lqgis_app
+
+INCLUDEPATH += $$QGIS_DIR
+INCLUDEPATH += $$QGIS_DIR/src/core
+INCLUDEPATH += $$QGIS_DIR/src/core/settings
+INCLUDEPATH += $$QGIS_DIR/src/core/providers
+INCLUDEPATH += $$QGIS_DIR/src/core/geometry
+INCLUDEPATH += $$QGIS_DIR/src/core/proj
+INCLUDEPATH += $$QGIS_DIR/src/core/metadata
+INCLUDEPATH += $$QGIS_DIR/src/core/symbology
+INCLUDEPATH += $$QGIS_DIR/external/nlohmann
+INCLUDEPATH += $$QGIS_DIR/src/core/expression
+INCLUDEPATH += $$QGIS_DIR/src/core/project
+INCLUDEPATH += $$QGIS_DIR/src/core/vector
+INCLUDEPATH += $$QGIS_DIR/src/core/editform
+INCLUDEPATH += $$QGIS_DIR/src/gui
+INCLUDEPATH += $$QGIS_DIR/src/core/labeling
+INCLUDEPATH += $$QGIS_DIR/src/core/raster
+INCLUDEPATH += $$QGIS_DIR/src/core/layertree
+INCLUDEPATH += $$QGIS_DIR/src/core/textrenderer
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

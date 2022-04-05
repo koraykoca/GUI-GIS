@@ -18,6 +18,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void printCoord(QgsPointXY);
+
 private:
     Ui::MainWindow *ui;
     QVBoxLayout* layoutMap;
