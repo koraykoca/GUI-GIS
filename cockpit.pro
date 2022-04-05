@@ -1,36 +1,26 @@
-<<<<<<< HEAD
-QT += core gui xml  # includes core, gui, and xml libraries
-
-CONFIG += c++17
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets  # widget application
-
-TEMPLATE = app  # GUI application
-TARGET = Cpp_GUI  # name of the project
-
-SOURCES += main.cpp
-
-HEADERS += main.h
-
-FORMS +=
-=======
 QT += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 
-DEFINES += CORE_EXPORT= GUI_EXPORT=
-DEFINES += QT_DEPRECATED_WARNINGS
+# You can make your code fail to compile if it uses deprecated APIs.
+# In order to do so, uncomment the following line.
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    map.cpp \
+    infogeneral.cpp \
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    map.h \
+    infogeneral.h \
 
 FORMS += \
+    mainwindow.ui \
     mainwindowbase.ui
 
 RESOURCES += \
@@ -38,14 +28,9 @@ RESOURCES += \
 
 TEMPLATE = app
 TARGET = Cpp_GUI
->>>>>>> develop
 
 QGIS_DIR = /home/koray/dev/cpp/QGIS
 LIBS += -L/$${QGIS_DIR}/build-master-qtcreator/output/lib -lqgis_core -lqgis_gui -lqgis_app
-
-#QGIS_DIR = /home/unibw/dev/cpp/QGIS
-#BUILD_DIR = /home/unibw/dev/cpp/QGIS-Debug-Build
-#LIBS += -L$${BUILD_DIR}/output/lib -lqgis_app -lqgis_core -lqgis_gui
 
 INCLUDEPATH += $$QGIS_DIR
 INCLUDEPATH += $$QGIS_DIR/src/core
@@ -65,9 +50,6 @@ INCLUDEPATH += $$QGIS_DIR/src/core/labeling
 INCLUDEPATH += $$QGIS_DIR/src/core/raster
 INCLUDEPATH += $$QGIS_DIR/src/core/layertree
 INCLUDEPATH += $$QGIS_DIR/src/core/textrenderer
-
-#INCLUDEPATH += $$BUILD_DIR/src/core
-#INCLUDEPATH += $$BUILD_DIR/src/gui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
