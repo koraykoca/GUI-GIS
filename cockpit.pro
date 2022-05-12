@@ -26,14 +26,13 @@ FORMS += \
 RESOURCES += \
     resources.qrc
 
-#include(/home/unibw/dev/cpp/qgis_template/Cpp_GUI.pro)
-#include(/home/unibw/dev/cpp/InfoGeneral/InfoGeneral.pro)
+QGIS_DIR = /home/unibw/dev/cpp/QGIS
+BUILD_DIR = /home/unibw/dev/cpp/QGIS-Debug-Build
+LIBS += -L$${BUILD_DIR}/output/lib -lqgis_app -lqgis_core -lqgis_gui
 
-#include(/home/koray/dev/cpp/Map/Cpp_GUI.pro)
-#include(/home/koray/dev/cpp/infoGeneral/InfoGeneral.pro)
-
-QGIS_DIR = /home/koray/dev/cpp/QGIS
-LIBS += -L/$${QGIS_DIR}/build-master-qtcreator/output/lib -lqgis_core -lqgis_gui -lqgis_app
+INCLUDEPATH += $$BUILD_DIR
+INCLUDEPATH += $$BUILD_DIR/src/core
+INCLUDEPATH += $$BUILD_DIR/src/gui
 
 INCLUDEPATH += $$QGIS_DIR
 INCLUDEPATH += $$QGIS_DIR/src/core

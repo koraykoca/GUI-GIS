@@ -30,8 +30,8 @@ Map::Map(QWidget* parent, Qt::WindowFlags fl)
    setupUi(this);
 
    // Instantiate Provider Registry
-   QString myPluginsDir = "/home/koray/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
-   //QString myPluginsDir = "/home/unibw/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
+   //QString myPluginsDir = "/home/koray/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
+   QString myPluginsDir = "/home/unibw/dev/cpp/QGIS/build-master-qtcreator/output/lib/qgis";
 
    crsSrc = QgsCoordinateReferenceSystem("EPSG:25832");  // UTM Zone 32
    crsDest = QgsCoordinateReferenceSystem("EPSG:4326");  // WGS 84
@@ -215,8 +215,8 @@ void Map::createLayer(QString type, QgsPointXY point){
 //    map["name"] = "mapMarker.png";
 //    map["size"]= "6";
 
-   //QString path = "/home/unibw/dev/cpp/qgis_template/mapMarker.png";
-   QString path = "/home/koray/dev/cpp/Cpp_GUI/mapMarker.png";
+   QString path = "/home/unibw/dev/cpp/qgis_template/mapMarker.png";
+   //QString path = "/home/koray/dev/cpp/Cpp_GUI/mapMarker.png";
    QgsSymbol* symbol = QgsSymbol::defaultSymbol(QgsWkbTypes::PointGeometry);
    symbol->deleteSymbolLayer(0);
 
@@ -397,8 +397,8 @@ void Map::addLayer2()
 
    if (layers.contains(ptrLayer2) == false){
 
-       QString myLayerPath2  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
-       //QString myLayerPath2  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
+       //QString myLayerPath2  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
+       QString myLayerPath2  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/ver01_l.shp";
        QString myLayerBaseName2 = "ver01_l";
        QString myProviderName = "ogr";
 
@@ -444,8 +444,8 @@ void Map::addLayer3()
 
    if (layers.contains(ptrLayer3) == false){
 
-       QString myLayerPath3  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
-       //QString myLayerPath3  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
+       //QString myLayerPath3  = "/home/koray/work-unibw/ldbv_bayern/ATKIS_DGM5_Bereich_Gauting_Luftfahrttechnik_Luft_und_Raumfahrttechnik/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
+       QString myLayerPath3  = "/home/unibw/dev/cpp/ldbv_bayern/Vektordaten_ATKIS_UTM32/601_DLM25_clip_n/veg02_f.shp";
        QString myLayerBaseName3 = "veg02_f";
        QString myProviderName = "ogr";
 
@@ -487,8 +487,8 @@ void Map::addLayer4()
 {
    if (layers.contains(ptrLayer4) == false){
 
-       QString myLayerPath4  = "/home/koray/work-unibw/2021_11_Airspace_Germany.txt";
-       //QString myLayerPath4  = "/home/unibw/dev/cpp/2021_11_Airspace_Germany.txt";
+       //QString myLayerPath4  = "/home/koray/work-unibw/2021_11_Airspace_Germany.txt";
+       QString myLayerPath4  = "/home/unibw/dev/cpp/2021_11_Airspace_Germany.txt";
        QString myLayerBaseName4 = "2021_11_Airspace_Germany — airspaces";
        QString myProviderName = "ogr";
 
