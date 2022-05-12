@@ -2,7 +2,7 @@
 Programming Graphical User Interface (GUI) in Qt Creator using QGIS API as an embedded mapping component. Developing a standalone QT 5.12.8 application using QGIS 3.23 C++ API.
 
 ## Build Steps
-First, you need to set up QGIS build environment. Following links are helpful:
+First, you need to set up QGIS build environment. Following links are helpful: 
 https://github.com/qgis/QGIS/blob/master/INSTALL.md
 https://www.youtube.com/watch?v=Nn3zt6IwphY&list=PLhZmjLdJAZWwTZIWKo5cZfKHW-606qw7p
 
