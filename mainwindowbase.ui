@@ -17,9 +17,9 @@
    <widget class="QFrame" name="frameMap">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>0</x>
       <y>10</y>
-      <width>641</width>
+      <width>631</width>
       <height>591</height>
      </rect>
     </property>
@@ -34,7 +34,7 @@
       <rect>
        <x>-5</x>
        <y>-9</y>
-       <width>651</width>
+       <width>641</width>
        <height>601</height>
       </rect>
      </property>
@@ -43,8 +43,8 @@
    <widget class="QCheckBox" name="checkBox">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>10</y>
+      <x>640</x>
+      <y>30</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -59,8 +59,8 @@
    <widget class="QCheckBox" name="checkBox_2">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>30</y>
+      <x>640</x>
+      <y>50</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -72,8 +72,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>120</y>
+      <x>640</x>
+      <y>140</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -85,8 +85,8 @@
    <widget class="QCheckBox" name="checkBox_3">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>50</y>
+      <x>640</x>
+      <y>70</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -98,8 +98,8 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>150</y>
+      <x>640</x>
+      <y>170</y>
       <width>121</width>
       <height>17</height>
      </rect>
@@ -111,8 +111,8 @@
    <widget class="QCheckBox" name="checkBox_4">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>70</y>
+      <x>640</x>
+      <y>90</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -124,8 +124,8 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>200</y>
+      <x>640</x>
+      <y>220</y>
       <width>151</width>
       <height>20</height>
      </rect>
@@ -137,8 +137,8 @@
    <widget class="QTextBrowser" name="textBrowser">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>220</y>
+      <x>640</x>
+      <y>240</y>
       <width>131</width>
       <height>31</height>
      </rect>

@@ -156,6 +156,8 @@ void Map::showContextMenu(const QPoint &pos){
    menu.addAction("Pan", this, SLOT(panMode()));
    connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(set_checks(QAction*)));
 
+   // dfsf
+
    QPoint globalPos = mpMapCanvas->mapToGlobal(pos); // handle global position
    menu.exec(globalPos);  // menu.exec(QCursor::pos());  // show context menu at handling position
 }
