@@ -1,6 +1,6 @@
 # CPP_GUI
 C++ Graphical User Interface (GUI) Programming in Qt Creator using QGIS3 C++ API as an embedded mapping component. 
-Developing a standalone QT 5.12.8 application using QGIS3 C++ API.
+Developing a standalone Qt 5.12.8 application using QGIS3 C++ API.
 
 ## Build and Running Steps
 - Clone the branch "release-3_24" from QGIS official repository:
@@ -22,5 +22,5 @@ Developing a standalone QT 5.12.8 application using QGIS3 C++ API.
         - QString myLayerPath3
         - QString myLayerPath4 
 
-- In Qt Creator go to Project/Build Settings and configure your build path. Then specify your KIT settings like Qt-Version, Compiler etc. 
+- In Qt Creator go to Project/Build Settings and configure your build path. Then specify your KIT settings like Qt-Version, Compiler etc. Currently, QGIS builds are only supported on version 5 of the Qt libraries. Thus, select Qt version 5.
 Finally compile and run the project in Qt Creator. 
