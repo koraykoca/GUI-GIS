@@ -26,7 +26,7 @@ FORMS += \
 RESOURCES += \
     resources.qrc
 
-QGIS_DIR = /home/unibw/dev/QGIS
+QGIS_DIR = /home/unibw/dev/cpp/QGIS
 BUILD_DIR = /home/unibw/dev/cpp/QGIS-Debug-Build
 LIBS += -L$${BUILD_DIR}/output/lib -lqgis_app -lqgis_core -lqgis_gui
 
