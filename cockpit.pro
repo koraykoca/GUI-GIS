@@ -27,7 +27,7 @@ RESOURCES += \
     resources.qrc
 
 
-QGIS_DIR = /home/unibw/dev/QGIS
+QGIS_DIR = /home/unibw/dev/cpp/QGIS
 BUILD_DIR = /home/unibw/dev/cpp/QGIS-Debug-Build
 LIBS += -L$${BUILD_DIR}/output/lib -lqgis_app -lqgis_core -lqgis_gui
 
@@ -41,6 +41,7 @@ LIBS += -L/$${QGIS_DIR}/build-master-qtcreator/output/lib -lqgis_core -lqgis_gui
 INCLUDEPATH += $$QGIS_DIR
 INCLUDEPATH += $$QGIS_DIR/src/core
 INCLUDEPATH += $$QGIS_DIR/src/core/settings
+INCLUDEPATH += $$QGIS_DIR/src/core/maprenderer
 INCLUDEPATH += $$QGIS_DIR/src/core/providers
 INCLUDEPATH += $$QGIS_DIR/src/core/geometry
 INCLUDEPATH += $$QGIS_DIR/src/core/proj
