@@ -37,6 +37,7 @@ INCLUDEPATH += $$BUILD_DIR/src/gui
 INCLUDEPATH += $$QGIS_DIR
 INCLUDEPATH += $$QGIS_DIR/src/core
 INCLUDEPATH += $$QGIS_DIR/src/core/settings
+INCLUDEPATH += $$QGIS_DIR/src/core/maprenderer
 INCLUDEPATH += $$QGIS_DIR/src/core/providers
 INCLUDEPATH += $$QGIS_DIR/src/core/geometry
 INCLUDEPATH += $$QGIS_DIR/src/core/proj
