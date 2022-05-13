@@ -6,7 +6,7 @@ CONFIG += c++17
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+# DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
     main.cpp \
@@ -26,11 +26,13 @@ FORMS += \
 RESOURCES += \
     resources.qrc
 
-#include(/home/unibw/dev/cpp/qgis_template/Cpp_GUI.pro)
-#include(/home/unibw/dev/cpp/InfoGeneral/InfoGeneral.pro)
+QGIS_DIR = /home/unibw/dev/QGIS
+BUILD_DIR = /home/unibw/dev/cpp/QGIS-Debug-Build
+LIBS += -L$${BUILD_DIR}/output/lib -lqgis_app -lqgis_core -lqgis_gui
 
-#include(/home/koray/dev/cpp/Map/Cpp_GUI.pro)
-#include(/home/koray/dev/cpp/infoGeneral/InfoGeneral.pro)
+INCLUDEPATH += $$BUILD_DIR
+INCLUDEPATH += $$BUILD_DIR/src/core
+INCLUDEPATH += $$BUILD_DIR/src/gui
 
 QGIS_DIR = /home/koray/dev/cpp/QGIS
 LIBS += -L/$${QGIS_DIR}/build-master-qtcreator/output/lib -lqgis_core -lqgis_gui -lqgis_app

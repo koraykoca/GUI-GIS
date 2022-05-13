@@ -11,7 +11,7 @@
 
 //QT Includes
 #include <QtGui>
-//#include <QWidget>
+#include <QWidget>
 #include <qtoolbar.h>
 #include <QVBoxLayout>
 #include <QObject>
