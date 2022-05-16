@@ -10,7 +10,7 @@ Developing a standalone Qt 5.12.8 application using QGIS3 C++ API.
     - https://github.com/qgis/QGIS/blob/master/INSTALL.md
     - https://www.youtube.com/watch?v=Nn3zt6IwphY&list=PLhZmjLdJAZWwTZIWKo5cZfKHW-606qw7p
 
-- Clone this repo and open the project file(.pro) in Qt Creator. Update path variable values accordingly in cockpit.pro and map.cpp files. 
+- Clone this repo and open the qmake project (.pro) file in Qt Creator. The qmake tool is supplied with Qt. It is used to build Qt itself as well as the tools and examples that accompany it. Update path variable values accordingly in cockpit.pro and map.cpp files. 
     - The path variables in cockpit.pro file are:
         - QGIS_DIR 
         - BUILD_DIR
@@ -24,3 +24,6 @@ Developing a standalone Qt 5.12.8 application using QGIS3 C++ API.
 
 - In Qt Creator go to Project/Build Settings and configure your build path. Then specify your KIT settings like Qt-Version, Compiler etc. Currently, QGIS builds are only supported on version 5 of the Qt libraries. Thus, select Qt version 5.
 Finally compile and run the project in Qt Creator. 
+
+### Recommended settings for Qt Creator:
+https://web.stanford.edu/dept/cs_edu/resources/qt/recommended-settings
