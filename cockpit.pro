@@ -8,27 +8,19 @@ CONFIG += c++17
 # In order to do so, uncomment the following line.
 # DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += \
-    main.cpp \
-    mainwindow.cpp \
-    map.cpp \
-    infogeneral.cpp \
+SOURCES += $$files("*.cpp", true)
 
-HEADERS += \
-    mainwindow.h \
-    map.h \
-    infogeneral.h \
+HEADERS += $$files("*.h", true)
 
 FORMS += \
     mainwindow.ui \
     mainwindowbase.ui
 
-RESOURCES += \
-    resources.qrc
+RESOURCES += resources.qrc
 
 
 QGIS_DIR = /home/unibw/dev/cpp/QGIS
-BUILD_DIR = /home/unibw/dev/cpp/QGIS-Debug-Build
+BUILD_DIR = /home/unibw/dev/cpp/QGIS-Build
 LIBS += -L$${BUILD_DIR}/output/lib -lqgis_app -lqgis_core -lqgis_gui
 
 INCLUDEPATH += $$BUILD_DIR
